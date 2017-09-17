@@ -43,6 +43,7 @@
   (let ((st (make-syntax-table)))
     (modify-syntax-entry ?\  " " st)
     (modify-syntax-entry ?\t " " st)
+    (modify-syntax-entry ?\\ "_" st)
     (modify-syntax-entry ?\" "\"" st)
     (modify-syntax-entry ?\[  "(]" st)
     (modify-syntax-entry ?\]  ")[" st)
@@ -55,7 +56,7 @@
 
 ;; define several category of keywords
 (setq dhall-mode-keywords '("if" "then" "else" "let" "in" "using") )
-(setq dhall-mode-types '("Optional" "Bool" "Integer" "Double" "Text" "List" "Type"))
+(setq dhall-mode-types '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type"))
 (setq dhall-mode-constants '("True" "False"))
 
 (setq dhall-mode-keywords-regexp (regexp-opt dhall-mode-keywords 'words))
