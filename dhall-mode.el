@@ -98,4 +98,6 @@
   (set-syntax-table dhall-mode-syntax-table)
   )
 
+;; Provide ourselves:
 (provide 'dhall-mode)
+;;; dhall-mode.el ends here
