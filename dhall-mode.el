@@ -1,8 +1,14 @@
+;;; dhall-mode.el --- a major mode for dhall configuration language -*- lexical-binding: t -*-
+
+;; Copyright (C) 2017 Sibi Prabakaran
+
 ;; -*- lexical-binding: t -*-
 
-;; Author:  2017 Sibi Prabakaran
+;; Author: Sibi Prabakaran <sibi@psibi.in>
+;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: Dhall mode
 ;; Version: 0.1
+;; Package-Requires: ((emacs "24.4") (highlight-numbers "0.2.3") (rainbow-delimiters "2.1.3") (highlight-operators "0.1"))
 ;; URL: https://github.com/psibi/dhall-mode
 
 ;; This file is not part of GNU Emacs.
