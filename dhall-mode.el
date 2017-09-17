@@ -2,8 +2,6 @@
 
 ;; Copyright (C) 2017 Sibi Prabakaran
 
-;; -*- lexical-binding: t -*-
-
 ;; Author: Sibi Prabakaran <sibi@psibi.in>
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: Dhall mode
