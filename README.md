@@ -15,7 +15,7 @@ language.
 Todo:
 
 * Add REPL support
-* Add automatic formatting on save
+* Add automatic formatting on save : Use [dhall-format](https://github.com/dhall-lang/dhall-haskell/pull/137)
 * Publish this to MELPA
 
 ## License
