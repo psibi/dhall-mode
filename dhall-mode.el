@@ -31,6 +31,8 @@
 ;;
 ;;  - Basic indendation
 ;;
+;;  - Error highlighting on unbalanced record, parenthesis in functions
+;;
 ;; Todo: Add REPL support and automatic formatting on save
 ;;
 
