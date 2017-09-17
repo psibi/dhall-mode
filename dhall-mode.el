@@ -86,6 +86,8 @@
     )
   )
 
+;; The main mode functions
+;;;###autoload
 (define-derived-mode dhall-mode prog-mode "Dhall"
   "Major mode for editing Dhall files."
   :group 'dhall
