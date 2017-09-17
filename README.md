@@ -18,4 +18,8 @@ Todo:
 * Add automatic formatting on save
 * Publish this to MELPA
 
+## License
 
+Copyright © 2017 Sibi Prabakaran
+
+Distributed under GNU GPL, version 3.
