@@ -45,6 +45,8 @@
 (require 'highlight-operators)
 
 ;; Create the syntax table for this mode.
+;;; Code:
+
 (defvar dhall-mode-syntax-table
   (let ((st (make-syntax-table)))
     (modify-syntax-entry ?\  " " st)
