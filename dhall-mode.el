@@ -48,7 +48,7 @@
   "Dhall Mode version.")
 
 
-(defgroup dhall-mode nil
+(defgroup dhall nil
   "Major mode for editing dhall files"
   :group 'languages
   :prefix "dhall-"
