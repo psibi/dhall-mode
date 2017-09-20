@@ -5,7 +5,7 @@
 ;; Author: Sibi Prabakaran <sibi@psibi.in>
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: languages
-;; Version: 0.1
+;; Version: 0.1.0
 ;; Package-Requires: ((emacs "24.4") (highlight-numbers "0.2.3") (rainbow-delimiters "2.1.3") (highlight-operators "0.1"))
 ;; URL: https://github.com/psibi/dhall-mode
 
@@ -44,6 +44,17 @@
 (require 'rainbow-delimiters)
 (require 'highlight-operators)
 
+(defconst dhall-mode-version "0.1.0"
+  "Dhall Mode version.")
+
+
+(defgroup dhall-mode nil
+  "Major mode for editing dhall files"
+  :group 'languages
+  :prefix "dhall-"
+  :link '(url-link :tag "Site" "https://github.com/psibi/dhall-mode")
+  :link '(url-link :tag "Repository" "https://github.com/psibi/dhall-mode"))
+
 ;; Create the syntax table for this mode.
 ;;; Code:
 
@@ -63,25 +74,28 @@
   "Syntax table used while in `dhall-mode'.")
 
 ;; define several category of keywords
-(setq dhall-mode-keywords '("if" "then" "else" "let" "in" "using") )
-(setq dhall-mode-types '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type"))
-(setq dhall-mode-constants '("True" "False"))
+(defvar dhall-mode-keywords
+  (regexp-opt '("if" "then" "else" "let" "in" "using")))
 
-(setq dhall-mode-keywords-regexp (regexp-opt dhall-mode-keywords 'words))
-(setq dhall-mode-type-regexp (regexp-opt dhall-mode-types 'words))
-(setq dhall-mode-constant-regexp (regexp-opt dhall-mode-constants 'words))
+(defvar dhall-mode-types
+  (regexp-opt
+  '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
+
+(defvar dhall-mode-types (regexp-opt
+'("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
+
+(defvar dhall-mode-constants (regexp-opt '("True" "False")))
 
 ;; Todo: Move away to proper multi line font lock methods
 (defconst dhall-mode-multiline-string-regexp
   "''[^']*''"
   "Regular expression for matching multiline dhall strings.")
 
-
 (defconst dhall-mode-font-lock-keywords
   `(;; Variables
-    (,dhall-mode-type-regexp . font-lock-type-face)
-    (,dhall-mode-constant-regexp . font-lock-constant-face)
-    (,dhall-mode-keywords-regexp . font-lock-keyword-face)
+    (,dhall-mode-types . font-lock-type-face)
+    (,dhall-mode-constants . font-lock-constant-face)
+    (,dhall-mode-keywords . font-lock-keyword-face)
     (,dhall-mode-multiline-string-regexp . font-lock-string-face)
     )
   )
