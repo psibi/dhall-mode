@@ -40,10 +40,6 @@
 ;; Todo: Add REPL support and automatic formatting on save
 ;;
 
-(require 'highlight-numbers)
-(require 'rainbow-delimiters)
-(require 'highlight-operators)
-
 (defconst dhall-mode-version "0.1.0"
   "Dhall Mode version.")
 
@@ -85,6 +81,10 @@
 '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
 
 (defvar dhall-mode-constants (regexp-opt '("True" "False")))
+(defvar dhall-mode-numerals "+[1-9]")
+(defvar dhall-mode-doubles "[0-9]\.[0-9]+")
+(defvar dhall-mode-operators "->\\|\\[\\|]\\|,\\|:\\|=\\|\\\\\(\\|)\\|&&\\|||\\|{\\|}")
+(defvar dhall-mode-variables "\\([a-zA-Z]+\\) =")
 
 ;; Todo: Move away to proper multi line font lock methods
 (defconst dhall-mode-multiline-string-regexp
@@ -95,7 +95,11 @@
   `(;; Variables
     (,dhall-mode-types . font-lock-type-face)
     (,dhall-mode-constants . font-lock-constant-face)
+    (,dhall-mode-operators . font-lock-builtin-face)
+    (,dhall-mode-variables . (1 font-lock-variable-name-face))
     (,dhall-mode-keywords . font-lock-keyword-face)
+    (,dhall-mode-doubles . font-lock-constant-face)
+    (,dhall-mode-numerals . font-lock-constant-face)
     (,dhall-mode-multiline-string-regexp . font-lock-string-face)
     )
   )
@@ -110,9 +114,6 @@
   (set (make-local-variable 'font-lock-multiline) t)
   (setq-local indent-tabs-mode t)
   (setq-local tab-width 4)
-  (highlight-numbers-mode 1)
-  (rainbow-delimiters-mode 1)
-  (highlight-operators-mode 1)
   (set-syntax-table dhall-mode-syntax-table)
   )
 
