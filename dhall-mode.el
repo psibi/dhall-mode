@@ -43,7 +43,6 @@
 (defconst dhall-mode-version "0.1.0"
   "Dhall Mode version.")
 
-
 (defgroup dhall nil
   "Major mode for editing dhall files"
   :group 'languages
@@ -116,6 +115,65 @@
   (setq-local tab-width 4)
   (set-syntax-table dhall-mode-syntax-table)
   )
+
+(defcustom dhall-format-command "dhall-format"
+  "Command used to format Dhall files.
+Should be dhall or the complete path to your dhall executable,
+  e.g.: /home/sibi/.local/bin/dhall-format"
+  :type 'file
+  :group 'dhall
+  :safe 'stringp)
+
+(defcustom dhall-format-at-save t
+  "If non-nil, the Dhal buffers will be formatted after each save."
+  :type 'boolean
+  :group 'dhall
+  :safe 'booleanp)
+
+(defcustom dhall-format-options '("--inplace")
+  "Command line options for dhall-format executable."
+  :type '(repeat string)
+  :group 'dhall
+  :safe t)
+
+(defun dhall-format ()
+  "Formats the current buffer using dhall-format."
+  (interactive)
+  (message "Formatting Dhall file")
+  (let* ((ext (file-name-extension buffer-file-name t))
+         (bufferfile (make-temp-file "dhall" nil ext))
+         (errbuf (get-buffer-create "*dhall errors*"))
+         (coding-system-for-read 'utf-8)
+         (coding-system-for-write 'utf-8)
+         )
+    (unwind-protect
+        (save-restriction
+          (widen)
+          (write-region nil nil bufferfile)
+          (apply 'call-process dhall-format-command nil errbuf t (append dhall-format-options (list bufferfile)))
+          (with-current-buffer errbuf
+            (save-restriction
+              (widen)
+              (let* ((errContent (buffer-substring-no-properties (point-min) (point-max)))
+                     (errLength (length errContent))
+                     )
+                (if (eq errLength 0)
+                    (message "Replace current buffer")
+                  (display-buffer errbuf)))
+          ;; todo
+          ;; now read how many characters are there in errbuf
+          ;; if > 0 => then error. So display that buffer.
+          ;; if == 0 => read bufferfile and replace current buffer with it
+          ))
+    )
+    (delete-file bufferfile)
+  ))
+)
+
+
+;; Automatically use dhall-mode for .dhall files.
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
 
 ;; Provide ourselves:
 (provide 'dhall-mode)
