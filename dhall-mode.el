@@ -6,7 +6,7 @@
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: languages
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "24.4") (ansi-color "3.0"))
 ;; URL: https://github.com/psibi/dhall-mode
 
 ;; This file is not part of GNU Emacs.
