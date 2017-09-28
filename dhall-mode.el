@@ -83,8 +83,8 @@
 (defvar dhall-mode-constants (regexp-opt '("True" "False")))
 (defvar dhall-mode-numerals "+[1-9]")
 (defvar dhall-mode-doubles "[0-9]\.[0-9]+")
-(defvar dhall-mode-operators "->\\|\\[\\|]\\|,\\|:\\|=\\|\\\\\(\\|)\\|&&\\|||\\|{\\|}")
-(defvar dhall-mode-variables "\\([a-zA-Z]+\\) =")
+(defvar dhall-mode-operators "->\\|\\[\\|]\\|,\\|:\\|=\\|\\\\\(\\|)\\|&&\\|||\\|{\\|}\\|(")
+(defvar dhall-mode-variables "\\([a-zA-Z]+\\) *\t*=")
 
 ;; Todo: Move away to proper multi line font lock methods
 (defconst dhall-mode-multiline-string-regexp
