@@ -6,7 +6,7 @@
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: languages
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "24.4") (highlight-numbers "0.2.3") (rainbow-delimiters "2.1.3") (highlight-operators "0.1"))
+;; Package-Requires: ((emacs "24.4"))
 ;; URL: https://github.com/psibi/dhall-mode
 
 ;; This file is not part of GNU Emacs.
