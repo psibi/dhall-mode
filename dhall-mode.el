@@ -40,6 +40,8 @@
 ;; Todo: Add REPL support and automatic formatting on save
 ;;
 
+(require 'ansi-color)
+
 (defconst dhall-mode-version "0.1.0" 
   "Dhall Mode version.")
 
@@ -158,7 +160,10 @@ Should be dhall or the complete path to your dhall executable,
                      (errLength (length errContent))) 
                 (if (eq errLength 0) 
                     'true
-                  (display-buffer errbuf)))))) 
+                  (progn
+                    (ansi-color-apply-on-region (point-min) (point-max))
+                    (display-buffer errbuf))
+                  ))))) 
       (delete-file bufferfile))))
 
 
