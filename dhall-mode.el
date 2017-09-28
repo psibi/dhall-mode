@@ -40,44 +40,42 @@
 ;; Todo: Add REPL support and automatic formatting on save
 ;;
 
-(defconst dhall-mode-version "0.1.0"
+(defconst dhall-mode-version "0.1.0" 
   "Dhall Mode version.")
 
-(defgroup dhall nil
-  "Major mode for editing dhall files"
-  :group 'languages
-  :prefix "dhall-"
-  :link '(url-link :tag "Site" "https://github.com/psibi/dhall-mode")
+(defgroup dhall nil 
+  "Major mode for editing dhall files" 
+  :group 'languages 
+  :prefix "dhall-" 
+  :link '(url-link :tag "Site" "https://github.com/psibi/dhall-mode") 
   :link '(url-link :tag "Repository" "https://github.com/psibi/dhall-mode"))
 
 ;; Create the syntax table for this mode.
 ;;; Code:
 
-(defvar dhall-mode-syntax-table
-  (let ((st (make-syntax-table)))
-    (modify-syntax-entry ?\  " " st)
-    (modify-syntax-entry ?\t " " st)
-    (modify-syntax-entry ?\\ "_" st)
-    (modify-syntax-entry ?\" "\"" st)
-    (modify-syntax-entry ?\[  "(]" st)
-    (modify-syntax-entry ?\]  ")[" st)
-    (modify-syntax-entry ?\( "()" st)
-    (modify-syntax-entry ?\) ")(" st)
-    (modify-syntax-entry ?- ". 12" st)
+(defvar dhall-mode-syntax-table 
+  (let ((st (make-syntax-table))) 
+    (modify-syntax-entry ?\  " " st) 
+    (modify-syntax-entry ?\t " " st) 
+    (modify-syntax-entry ?\\ "_" st) 
+    (modify-syntax-entry ?\" "\"" st) 
+    (modify-syntax-entry ?\[  "(]" st) 
+    (modify-syntax-entry ?\]  ")[" st) 
+    (modify-syntax-entry ?\( "()" st) 
+    (modify-syntax-entry ?\) ")(" st) 
+    (modify-syntax-entry ?- ". 12" st) 
     (modify-syntax-entry ?\n ">" st)
     st)
   "Syntax table used while in `dhall-mode'.")
 
 ;; define several category of keywords
-(defvar dhall-mode-keywords
-  (regexp-opt '("if" "then" "else" "let" "in" "using")))
+(defvar dhall-mode-keywords (regexp-opt '("if" "then" "else" "let" "in" "using")))
 
-(defvar dhall-mode-types
-  (regexp-opt
-  '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
+(defvar dhall-mode-types 
+  (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
 
-(defvar dhall-mode-types (regexp-opt
-'("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
+(defvar dhall-mode-types 
+  (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
 
 (defvar dhall-mode-constants (regexp-opt '("True" "False")))
 (defvar dhall-mode-numerals "+[1-9]")
@@ -86,89 +84,82 @@
 (defvar dhall-mode-variables "\\([a-zA-Z]+\\) *\t*=")
 
 ;; Todo: Move away to proper multi line font lock methods
-(defconst dhall-mode-multiline-string-regexp
-  "''[^']*''"
+(defconst dhall-mode-multiline-string-regexp "''[^']*''" 
   "Regular expression for matching multiline dhall strings.")
 
-(defconst dhall-mode-font-lock-keywords
-  `(;; Variables
-    (,dhall-mode-types . font-lock-type-face)
-    (,dhall-mode-constants . font-lock-constant-face)
-    (,dhall-mode-operators . font-lock-builtin-face)
-    (,dhall-mode-variables . (1 font-lock-variable-name-face))
-    (,dhall-mode-keywords . font-lock-keyword-face)
-    (,dhall-mode-doubles . font-lock-constant-face)
-    (,dhall-mode-numerals . font-lock-constant-face)
-    (,dhall-mode-multiline-string-regexp . font-lock-string-face)
-    )
-  )
+(defconst dhall-mode-font-lock-keywords 
+  `( ;; Variables
+    (,dhall-mode-types . font-lock-type-face) 
+    (,dhall-mode-constants . font-lock-constant-face) 
+    (,dhall-mode-operators . font-lock-builtin-face) 
+    (,dhall-mode-variables . (1 font-lock-variable-name-face)) 
+    (,dhall-mode-keywords . font-lock-keyword-face) 
+    (,dhall-mode-doubles . font-lock-constant-face) 
+    (,dhall-mode-numerals . font-lock-constant-face) 
+    (,dhall-mode-multiline-string-regexp . font-lock-string-face)))
 
 ;; The main mode functions
 ;;;###autoload
-(define-derived-mode dhall-mode prog-mode "Dhall"
-  "Major mode for editing Dhall files."
-  :group 'dhall
-  (setq font-lock-defaults '((dhall-mode-font-lock-keywords) nil nil))
-  (set (make-local-variable 'comment-start) "--")
-  (set (make-local-variable 'font-lock-multiline) t)
-  (setq-local indent-tabs-mode t)
-  (setq-local tab-width 4)
-  (set-syntax-table dhall-mode-syntax-table)
-  )
+(define-derived-mode dhall-mode prog-mode 
+  "Dhall"
+  "Major mode for editing Dhall files." 
+  :group 'dhall 
+  (setq font-lock-defaults '((dhall-mode-font-lock-keywords) nil nil)) 
+  (set (make-local-variable 'comment-start) "--") 
+  (set (make-local-variable 'font-lock-multiline) t) 
+  (setq-local indent-tabs-mode t) 
+  (setq-local tab-width 4) 
+  (set-syntax-table dhall-mode-syntax-table))
 
-(defcustom dhall-format-command "dhall-format"
+(defcustom dhall-format-command "dhall-format" 
   "Command used to format Dhall files.
 Should be dhall or the complete path to your dhall executable,
-  e.g.: /home/sibi/.local/bin/dhall-format"
-  :type 'file
-  :group 'dhall
+  e.g.: /home/sibi/.local/bin/dhall-format" 
+  :type 'file 
+  :group 'dhall 
   :safe 'stringp)
 
-(defcustom dhall-format-at-save t
-  "If non-nil, the Dhal buffers will be formatted after each save."
-  :type 'boolean
-  :group 'dhall
+(defcustom dhall-format-at-save t 
+  "If non-nil, the Dhal buffers will be formatted after each save." 
+  :type 'boolean 
+  :group 'dhall 
   :safe 'booleanp)
 
-(defcustom dhall-format-options '("--inplace")
-  "Command line options for dhall-format executable."
-  :type '(repeat string)
-  :group 'dhall
+(defcustom dhall-format-options '("--inplace") 
+  "Command line options for dhall-format executable." 
+  :type '(repeat string) 
+  :group 'dhall 
   :safe t)
 
-(defun dhall-format ()
-  "Formats the current buffer using dhall-format."
-  (interactive)
-  (message "Formatting Dhall file")
-  (let* ((ext (file-name-extension buffer-file-name t))
-         (bufferfile (make-temp-file "dhall" nil ext))
-         (errbuf (get-buffer-create "*dhall errors*"))
-         (coding-system-for-read 'utf-8)
-         (coding-system-for-write 'utf-8)
-         )
-    (unwind-protect
-        (save-restriction
-          (widen)
-          (write-region nil nil bufferfile)
-          (apply 'call-process dhall-format-command nil errbuf t (append dhall-format-options (list bufferfile)))
-          (with-current-buffer errbuf
-            (save-restriction
-              (widen)
-              (let* ((errContent (buffer-substring-no-properties (point-min) (point-max)))
-                     (errLength (length errContent))
-                     )
-                (if (eq errLength 0)
-                    (message "Replace current buffer")
-                  (display-buffer errbuf)))
-          ;; todo
-          ;; now read how many characters are there in errbuf
-          ;; if > 0 => then error. So display that buffer.
-          ;; if == 0 => read bufferfile and replace current buffer with it
-          ))
-    )
-    (delete-file bufferfile)
-  ))
-)
+(defun dhall-format () 
+  "Formats the current buffer using dhall-format." 
+  (interactive) 
+  (message "Formatting Dhall file") 
+  (let* ((ext (file-name-extension buffer-file-name t)) 
+         (bufferfile (make-temp-file "dhall" nil ext)) 
+         (errbuf (get-buffer-create "*dhall errors*")) 
+         (coding-system-for-read 'utf-8) 
+         (coding-system-for-write 'utf-8)) 
+    (unwind-protect 
+        (save-restriction 
+          (widen) 
+          (write-region nil nil bufferfile) 
+          (with-current-buffer errbuf 
+            (erase-buffer)) 
+          (apply 'call-process dhall-format-command nil errbuf t (append dhall-format-options (list
+                                                                                               (buffer-file-name)))) 
+          (with-current-buffer errbuf 
+            (save-restriction 
+              (widen) 
+              (let* ((errContent 
+                      (buffer-substring-no-properties 
+                       (point-min) 
+                       (point-max))) 
+                     (errLength (length errContent))) 
+                (if (eq errLength 0) 
+                    'true
+                  (display-buffer errbuf)))))) 
+      (delete-file bufferfile))))
 
 
 ;; Automatically use dhall-mode for .dhall files.
