@@ -39,6 +39,7 @@
 ;;
 ;; Todo: Add REPL support and automatic formatting on save
 ;;
+;;; Code:
 
 (require 'ansi-color)
 
@@ -53,8 +54,6 @@
   :link '(url-link :tag "Repository" "https://github.com/psibi/dhall-mode"))
 
 ;; Create the syntax table for this mode.
-;;; Code:
-
 (defvar dhall-mode-syntax-table 
   (let ((st (make-syntax-table))) 
     (modify-syntax-entry ?\  " " st) 
