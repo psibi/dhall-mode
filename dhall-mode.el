@@ -124,8 +124,8 @@ Should be dhall or the complete path to your dhall executable,
   (interactive) 
   (message "Formatting Dhall file") 
   (let* ((ext (file-name-extension buffer-file-name t)) 
-         (bufferfile (make-temp-file "dhall" nil ext))
-         (curbuf (current-buffer))
+         (bufferfile (make-temp-file "dhall" nil ext)) 
+         (curbuf (current-buffer)) 
          (errbuf (get-buffer-create "*dhall errors*")) 
          (coding-system-for-read 'utf-8) 
          (coding-system-for-write 'utf-8)) 
@@ -148,19 +148,22 @@ Should be dhall or the complete path to your dhall executable,
                 (if (eq errLength 0) 
                     (progn
                       ;; (delete-window (get-buffer-window errbuf))
-                      (with-current-buffer curbuf
-                        (revert-buffer :ignore-auto :noconfirm :preserve-modes)
-                        ))
-                  (progn
-                    (ansi-color-apply-on-region (point-min) (point-max))
-                    (display-buffer errbuf))
-                  ))))) 
+                      (with-current-buffer curbuf 
+                        (revert-buffer 
+                         :ignore-auto 
+
+                         :noconfirm 
+                         :preserve-modes))) 
+                  (progn 
+                    (ansi-color-apply-on-region (point-min) 
+                                                (point-max)) 
+                    (display-buffer errbuf))))))) 
       (delete-file bufferfile))))
 
-(defun dhall-format-maybe ()
-  "Run `dhall-format' if `dhall-format-at-save' is non-nil."
+(defun dhall-format-maybe () 
+  "Run `dhall-format' if `dhall-format-at-save' is non-nil." 
   (if dhall-format-at-save
-(dhall-format)))
+      (dhall-format)))
 
 ;; The main mode functions
 ;;;###autoload
@@ -173,9 +176,8 @@ Should be dhall or the complete path to your dhall executable,
   (set (make-local-variable 'font-lock-multiline) t) 
   (setq-local indent-tabs-mode t) 
   (setq-local tab-width 4) 
-  (set-syntax-table dhall-mode-syntax-table)
-  (add-hook 'after-save-hook 'dhall-format-maybe nil t)
-)
+  (set-syntax-table dhall-mode-syntax-table) 
+  (add-hook 'after-save-hook 'dhall-format-maybe nil t))
 
 ;; Automatically use dhall-mode for .dhall files.
 ;;;###autoload
