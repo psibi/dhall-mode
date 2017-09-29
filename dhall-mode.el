@@ -99,19 +99,6 @@
     (,dhall-mode-numerals . font-lock-constant-face) 
     (,dhall-mode-multiline-string-regexp . font-lock-string-face)))
 
-;; The main mode functions
-;;;###autoload
-(define-derived-mode dhall-mode prog-mode 
-  "Dhall"
-  "Major mode for editing Dhall files." 
-  :group 'dhall 
-  (setq font-lock-defaults '((dhall-mode-font-lock-keywords) nil nil)) 
-  (set (make-local-variable 'comment-start) "--") 
-  (set (make-local-variable 'font-lock-multiline) t) 
-  (setq-local indent-tabs-mode t) 
-  (setq-local tab-width 4) 
-  (set-syntax-table dhall-mode-syntax-table))
-
 (defcustom dhall-format-command "dhall-format" 
   "Command used to format Dhall files.
 Should be dhall or the complete path to your dhall executable,
@@ -165,6 +152,25 @@ Should be dhall or the complete path to your dhall executable,
                   ))))) 
       (delete-file bufferfile))))
 
+(defun dhall-format-maybe ()
+  "Run `dhall-format' if `dhall-format-at-save' is non-nil."
+  (if dhall-format-at-save
+(dhall-format)))
+
+;; The main mode functions
+;;;###autoload
+(define-derived-mode dhall-mode prog-mode 
+  "Dhall"
+  "Major mode for editing Dhall files." 
+  :group 'dhall 
+  (setq font-lock-defaults '((dhall-mode-font-lock-keywords) nil nil)) 
+  (set (make-local-variable 'comment-start) "--") 
+  (set (make-local-variable 'font-lock-multiline) t) 
+  (setq-local indent-tabs-mode t) 
+  (setq-local tab-width 4) 
+  (set-syntax-table dhall-mode-syntax-table)
+  (add-hook 'after-save-hook 'dhall-format-maybe nil t)
+)
 
 ;; Automatically use dhall-mode for .dhall files.
 ;;;###autoload
