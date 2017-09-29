@@ -124,7 +124,8 @@ Should be dhall or the complete path to your dhall executable,
   (interactive) 
   (message "Formatting Dhall file") 
   (let* ((ext (file-name-extension buffer-file-name t)) 
-         (bufferfile (make-temp-file "dhall" nil ext)) 
+         (bufferfile (make-temp-file "dhall" nil ext))
+         (curbuf (current-buffer))
          (errbuf (get-buffer-create "*dhall errors*")) 
          (coding-system-for-read 'utf-8) 
          (coding-system-for-write 'utf-8)) 
@@ -145,7 +146,11 @@ Should be dhall or the complete path to your dhall executable,
                        (point-max))) 
                      (errLength (length errContent))) 
                 (if (eq errLength 0) 
-                    'true
+                    (progn
+                      ;; (delete-window (get-buffer-window errbuf))
+                      (with-current-buffer curbuf
+                        (revert-buffer :ignore-auto :noconfirm :preserve-modes)
+                        ))
                   (progn
                     (ansi-color-apply-on-region (point-min) (point-max))
                     (display-buffer errbuf))
