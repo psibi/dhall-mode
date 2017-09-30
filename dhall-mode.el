@@ -57,7 +57,7 @@
 (defvar dhall-mode-syntax-table 
   (let ((st (make-syntax-table))) 
     (modify-syntax-entry ?\  " " st) 
-    (modify-syntax-entry ?\t " " st) 
+    (modify-syntax-entry ?\t " " st)
     (modify-syntax-entry ?\\ "_" st) 
     (modify-syntax-entry ?\" "\"" st) 
     (modify-syntax-entry ?\[  "(]" st) 
@@ -65,6 +65,10 @@
     (modify-syntax-entry ?\( "()" st) 
     (modify-syntax-entry ?\) ")(" st) 
     (modify-syntax-entry ?- ". 12" st) 
+    ;; Taken from haskell-mode: https://stackoverflow.com/a/20845468/1651941
+    (modify-syntax-entry ?\{  "(}1nb" st)
+    (modify-syntax-entry ?\}  "){4nb" st)
+    (modify-syntax-entry ?-  "_ 123" st)
     (modify-syntax-entry ?\n ">" st)
     st)
   "Syntax table used while in `dhall-mode'.")
@@ -84,10 +88,6 @@
 (defvar dhall-mode-operators "->\\|\\[\\|]\\|,\\|:\\|=\\|\\\\\(\\|)\\|&&\\|||\\|{\\|}\\|(")
 (defvar dhall-mode-variables "\\([a-zA-Z]+\\) *\t*=")
 
-;; Todo: Move away to proper multi line font lock methods
-(defconst dhall-mode-multiline-string-regexp "''[^']*''" 
-  "Regular expression for matching multiline dhall strings.")
-
 (defconst dhall-mode-font-lock-keywords 
   `( ;; Variables
     (,dhall-mode-types . font-lock-type-face) 
@@ -97,7 +97,7 @@
     (,dhall-mode-keywords . font-lock-keyword-face) 
     (,dhall-mode-doubles . font-lock-constant-face) 
     (,dhall-mode-numerals . font-lock-constant-face) 
-    (,dhall-mode-multiline-string-regexp . font-lock-string-face)))
+    ))
 
 (defcustom dhall-format-command "dhall-format" 
   "Command used to format Dhall files.
@@ -172,8 +172,6 @@ Should be dhall or the complete path to your dhall executable,
   "Major mode for editing Dhall files." 
   :group 'dhall 
   (setq font-lock-defaults '((dhall-mode-font-lock-keywords) nil nil)) 
-  (set (make-local-variable 'comment-start) "--") 
-  (set (make-local-variable 'font-lock-multiline) t) 
   (setq-local indent-tabs-mode t) 
   (setq-local tab-width 4) 
   (set-syntax-table dhall-mode-syntax-table) 
