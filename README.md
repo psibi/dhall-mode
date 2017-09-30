@@ -6,12 +6,12 @@ Emacs Major mode for working
 with [Dhall](https://github.com/dhall-lang/dhall-lang) configuration
 language.
 
-Installation:
+## Installation
 
 * Make sure that you
   install [dhall-format](https://github.com/dhall-lang/dhall-haskell)
   and it's PATH is available to emacs via `exec-path`.
-* Install it from MELPA:
+* Install this extension from MELPA:
 
 ``` emacs-lisp
 (use-package dhall-mode
