@@ -1,22 +1,38 @@
 # dhall-mode
 
+[![MELPA](https://melpa.org/packages/dhall-mode-badge.svg)](https://melpa.org/#/dhall-mode)
+
 Emacs Major mode for working
 with [Dhall](https://github.com/dhall-lang/dhall-lang) configuration
 language.
 
-![Dhall in Emacs](https://user-images.githubusercontent.com/737477/30524312-ffc87a56-9c0e-11e7-89f4-86d166e603f7.gif "Dhall mode in Emacs")
+Installation:
+
+* Make sure that you
+  install [dhall-format](https://github.com/dhall-lang/dhall-haskell)
+  and it's PATH is available to emacs via `exec-path`.
+* Install it from MELPA:
+
+``` emacs-lisp
+(use-package dhall-mode
+  :ensure t
+  :mode "\\.dhall\\'")
+```
+
+## Demo
+
+![Dhall in Emacs](https://user-images.githubusercontent.com/737477/31044377-e2af0e9e-a5eb-11e7-9757-806ae1448c40.gif "Dhall mode in Emacs")
 
 ## Features
 
 * Syntax highlighting (Using font lock)
 * Basic indendation
-* Error highlighting on unbalanced record, parenthesis in functions
+* Automatic formmating on save (Configurable via variable)
+* Error highlighting.
 
 Todo:
 
-* Add REPL support
-* Add automatic formatting on save : Use [dhall-format](https://github.com/dhall-lang/dhall-haskell/pull/137)
-* Publish this to MELPA
+* Add REPL support. See: https://github.com/dhall-lang/dhall-lang/issues/17
 
 ## License
 
