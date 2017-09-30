@@ -5,7 +5,7 @@
 ;; Author: Sibi Prabakaran <sibi@psibi.in>
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: languages
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Package-Requires: ((emacs "24.4") (ansi-color "3.0"))
 ;; URL: https://github.com/psibi/dhall-mode
 
@@ -43,7 +43,7 @@
 
 (require 'ansi-color)
 
-(defconst dhall-mode-version "0.1.0" 
+(defconst dhall-mode-version "0.1.1" 
   "Dhall Mode version.")
 
 (defgroup dhall nil 
