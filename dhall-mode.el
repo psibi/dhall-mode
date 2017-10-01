@@ -58,8 +58,8 @@
   (let ((st (make-syntax-table))) 
     (modify-syntax-entry ?\  " " st) 
     (modify-syntax-entry ?\t " " st)
-    (modify-syntax-entry ?\\ "_" st) 
-    (modify-syntax-entry ?\" "\"" st) 
+    ;; \ should be in escape class
+    (modify-syntax-entry ?\\ "\\" st)
     (modify-syntax-entry ?\[  "(]" st) 
     (modify-syntax-entry ?\]  ")[" st) 
     (modify-syntax-entry ?\( "()" st) 
