@@ -56,20 +56,24 @@
 ;; Create the syntax table for this mode.
 (defvar dhall-mode-syntax-table 
   (let ((st (make-syntax-table))) 
-    (modify-syntax-entry ?\  " " st) 
-    (modify-syntax-entry ?\t " " st)
-    ;; \ should be in escape class
-    (modify-syntax-entry ?\\ "\\" st)
-    (modify-syntax-entry ?\[  "(]" st) 
-    (modify-syntax-entry ?\]  ")[" st) 
-    (modify-syntax-entry ?\( "()" st) 
-    (modify-syntax-entry ?\) ")(" st) 
-    (modify-syntax-entry ?- ". 12" st) 
-    ;; Taken from haskell-mode: https://stackoverflow.com/a/20845468/1651941
+        ;; Taken from haskell-mode: https://stackoverflow.com/a/20845468/1651941
     (modify-syntax-entry ?\{  "(}1nb" st)
     (modify-syntax-entry ?\}  "){4nb" st)
     (modify-syntax-entry ?-  "_ 123" st)
     (modify-syntax-entry ?\n ">" st)
+    (modify-syntax-entry ?\  " " st) 
+    (modify-syntax-entry ?\t " " st)
+
+    ;; End...
+    (modify-syntax-entry ?\[  "(]" st) 
+    (modify-syntax-entry ?\]  ")[" st) 
+    (modify-syntax-entry ?\( "()" st) 
+    (modify-syntax-entry ?\) ")(" st) 
+    ;; Let us handle escapes and string
+    (modify-syntax-entry ?\\ "." st)
+    (modify-syntax-entry ?\" "." st)
+    ;; End
+
     st)
   "Syntax table used while in `dhall-mode'.")
 
@@ -165,16 +169,58 @@ Should be dhall or the complete path to your dhall executable,
   (if dhall-format-at-save
       (dhall-format)))
 
+(defun dhall--get-parse-state (pos)
+  "Get the result of `syntax-ppss' at POS."
+  (save-excursion (save-match-data (syntax-ppss pos))))
+
+(defun dhall--get-string-type (parse-state)
+  "Get the type of string based on PARSE-STATE."
+  (let ((string-start (nth 8 parse-state)))
+    (and string-start (get-text-property string-start 'dhall-string-type))))
+
+(defun dhall--mark-string (pos string-type)
+  "Mark string as a Dhall string.
+
+POS position of start of string
+STRING-TYPE type of string based off of Emacs syntax table types"
+  (put-text-property pos (1+ pos)
+                     'syntax-table (string-to-syntax "|"))
+  (put-text-property pos (1+ pos)
+                     'dhall-string-type string-type))
+
+(defun dhall--double-quotes ()
+  "Handle Dhall double quotes."
+  (let* ((pos (match-beginning 0))
+          (ps (dhall--get-parse-state pos))
+          (string-type (dhall--get-string-type ps)))
+     (unless (equal string-type ?\')
+       (dhall--mark-string pos ?\"))))
+
+(defun dhall-syntax-propertize (start end)
+  "Special syntax properties for Dhall from START to END"
+  (goto-char start)
+  (remove-text-properties start end '(syntax-table nil dhall-string-type nil))
+  (funcall
+   (syntax-propertize-rules
+    ("\""
+     (0 (ignore (dhall--double-quotes)))))
+   start end))
+
 ;; The main mode functions
 ;;;###autoload
 (define-derived-mode dhall-mode prog-mode 
   "Dhall"
   "Major mode for editing Dhall files." 
   :group 'dhall 
-  (setq font-lock-defaults '((dhall-mode-font-lock-keywords) nil nil)) 
+  :syntax-table dhall-mode-syntax-table
+  (setq font-lock-defaults '(dhall-mode-font-lock-keywords))
   (setq-local indent-tabs-mode t) 
   (setq-local tab-width 4) 
-  (set-syntax-table dhall-mode-syntax-table) 
+  ;; Special syntax properties for Dhall
+  (setq-local syntax-propertize-function 'dhall-syntax-propertize)
+  
+  ;; Look at text properties when parsing
+  ;; (setq-local parse-sexp-lookup-properties t)
   (add-hook 'after-save-hook 'dhall-format-maybe nil t))
 
 ;; Automatically use dhall-mode for .dhall files.
