@@ -221,6 +221,8 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   (setq font-lock-defaults '(dhall-mode-font-lock-keywords))
   (setq-local indent-tabs-mode t) 
   (setq-local tab-width 4) 
+  (setq-local comment-start "-- ")
+  (setq-local comment-end "")
   ;; Special syntax properties for Dhall
   (setq-local syntax-propertize-function 'dhall-syntax-propertize)
   
