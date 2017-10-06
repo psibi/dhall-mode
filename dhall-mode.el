@@ -5,7 +5,7 @@
 ;; Author: Sibi Prabakaran <sibi@psibi.in>
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: languages
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Package-Requires: ((emacs "24.4") (ansi-color "3.0"))
 ;; URL: https://github.com/psibi/dhall-mode
 
@@ -43,7 +43,7 @@
 
 (require 'ansi-color)
 
-(defconst dhall-mode-version "0.1.1" 
+(defconst dhall-mode-version "0.1.2" 
   "Dhall Mode version.")
 
 (defgroup dhall nil 
@@ -63,8 +63,6 @@
     (modify-syntax-entry ?\n ">" st)
     (modify-syntax-entry ?\  " " st) 
     (modify-syntax-entry ?\t " " st)
-
-    ;; End...
     (modify-syntax-entry ?\[  "(]" st) 
     (modify-syntax-entry ?\]  ")[" st) 
     (modify-syntax-entry ?\( "()" st) 
@@ -73,7 +71,6 @@
     (modify-syntax-entry ?\\ "." st)
     (modify-syntax-entry ?\" "." st)
     ;; End
-
     st)
   "Syntax table used while in `dhall-mode'.")
 
