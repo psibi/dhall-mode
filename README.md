@@ -27,7 +27,7 @@ language.
 
 * Syntax highlighting (Using font lock)
 * Multiline support for String
-* Basic indendation
+* Basic indendation, commenting
 * Automatic formatting on save (Configurable via variable). Uses [dhall-format](https://github.com/dhall-lang/dhall-haskell) for it.
 * Error highlighting.
 

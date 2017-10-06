@@ -5,7 +5,7 @@
 ;; Author: Sibi Prabakaran <sibi@psibi.in>
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: languages
-;; Version: 0.1.2
+;; Version: 0.1.3
 ;; Package-Requires: ((emacs "24.4") (ansi-color "3.0"))
 ;; URL: https://github.com/psibi/dhall-mode
 
@@ -33,7 +33,7 @@
 ;;
 ;;  - syntax highlighting (font lock),
 ;;
-;;  - Basic indendation
+;;  - Basic indendation, multi line string support
 ;;
 ;;  - Automatic formatting on save (configuratle via variable)
 ;;
@@ -43,7 +43,7 @@
 
 (require 'ansi-color)
 
-(defconst dhall-mode-version "0.1.2" 
+(defconst dhall-mode-version "0.1.3" 
   "Dhall Mode version.")
 
 (defgroup dhall nil 
