@@ -35,9 +35,9 @@
 ;;
 ;;  - Basic indendation
 ;;
-;;  - Error highlighting on unbalanced record, parenthesis in functions
+;;  - Automatic formatting on save (configuratle via variable)
 ;;
-;; Todo: Add REPL support and automatic formatting on save
+;;  - Error highlighting
 ;;
 ;;; Code:
 
@@ -193,8 +193,14 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   (let* ((pos (match-beginning 0))
           (ps (dhall--get-parse-state pos))
           (string-type (dhall--get-string-type ps)))
-     (unless (equal string-type ?\')
-       (dhall--mark-string pos ?\"))))
+    (dhall--mark-string pos ?\")))
+
+(defun dhall--single-quotes ()
+  "Handle Dhall single quotes"
+  (let* ((pos (match-beginning 0))
+          (ps (dhall--get-parse-state pos))
+          (string-type (dhall--get-string-type ps)))
+    (dhall--mark-string pos ?\")))
 
 (defun dhall-syntax-propertize (start end)
   "Special syntax properties for Dhall from START to END"
@@ -202,9 +208,11 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   (remove-text-properties start end '(syntax-table nil dhall-string-type nil))
   (funcall
    (syntax-propertize-rules
+    ("'\\{2,\\}"
+     (0 (ignore (dhall--single-quotes))))
     ("\""
-     (0 (ignore (dhall--double-quotes)))))
-   start end))
+     (0 (ignore (dhall--double-quotes))))
+    )start end))
 
 ;; The main mode functions
 ;;;###autoload
