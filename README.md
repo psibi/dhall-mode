@@ -27,7 +27,7 @@ language.
 
 * Syntax highlighting (Using font lock)
 * Basic indendation
-* Automatic formmating on save (Configurable via variable)
+* Automatic formatting on save (Configurable via variable)
 * Error highlighting.
 
 Todo:
