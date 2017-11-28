@@ -223,8 +223,6 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   ;; Special syntax properties for Dhall
   (setq-local syntax-propertize-function 'dhall-syntax-propertize)
   
-  ;; Look at text properties when parsing
-  ;; (setq-local parse-sexp-lookup-properties t)
   (add-hook 'after-save-hook 'dhall-format-maybe nil t))
 
 ;; Automatically use dhall-mode for .dhall files.
