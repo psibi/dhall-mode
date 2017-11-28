@@ -84,7 +84,7 @@
 (defvar dhall-mode-numerals "+[1-9]")
 (defvar dhall-mode-doubles "[0-9]\.[0-9]+")
 (defvar dhall-mode-operators "->\\|\\[\\|]\\|,\\|:\\|=\\|\\\\\(\\|)\\|&&\\|||\\|{\\|}\\|(")
-(defvar dhall-mode-variables "\\([a-zA-Z]+\\) *\t*=")
+(defvar dhall-mode-variables "\\([a-zA-Z_][a-zA-Z_0-9\\-]*\\)[[:space:]]*=")
 
 (defconst dhall-mode-font-lock-keywords 
   `( ;; Variables
