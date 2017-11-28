@@ -187,14 +187,14 @@ STRING-TYPE type of string based off of Emacs syntax table types"
     (dhall--mark-string pos ?\")))
 
 (defun dhall--single-quotes ()
-  "Handle Dhall single quotes"
+  "Handle Dhall single quotes."
   (let* ((pos (match-beginning 0))
-          (ps (dhall--get-parse-state pos))
-          (string-type (dhall--get-string-type ps)))
+         (ps (dhall--get-parse-state pos))
+         (string-type (dhall--get-string-type ps)))
     (dhall--mark-string pos ?\")))
 
 (defun dhall-syntax-propertize (start end)
-  "Special syntax properties for Dhall from START to END"
+  "Special syntax properties for Dhall from START to END."
   (goto-char start)
   (remove-text-properties start end '(syntax-table nil dhall-string-type nil))
   (funcall
