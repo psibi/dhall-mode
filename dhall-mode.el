@@ -56,10 +56,10 @@
 ;; Create the syntax table for this mode.
 (defvar dhall-mode-syntax-table 
   (let ((st (make-syntax-table))) 
-        ;; Taken from haskell-mode: https://stackoverflow.com/a/20845468/1651941
+    ;; Taken from haskell-mode: https://stackoverflow.com/a/20845468/1651941
     (modify-syntax-entry ?\{  "(}1nb" st)
     (modify-syntax-entry ?\}  "){4nb" st)
-    (modify-syntax-entry ?-  "_ 123" st)
+    (modify-syntax-entry ?-  ". 123" st)
     (modify-syntax-entry ?\n ">" st)
     (modify-syntax-entry ?\  " " st) 
     (modify-syntax-entry ?\t " " st)
