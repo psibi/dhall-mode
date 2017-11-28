@@ -83,7 +83,7 @@
 (defvar dhall-mode-constants (concat "\\_<" (regexp-opt '("True" "False")) "\\_>"))
 (defvar dhall-mode-numerals "+[1-9]")
 (defvar dhall-mode-doubles "[0-9]\.[0-9]+")
-(defvar dhall-mode-operators "->\\|\\[\\|]\\|,\\|:\\|=\\|\\\\\(\\|)\\|&&\\|||\\|{\\|}\\|(")
+(defvar dhall-mode-operators (regexp-opt '("->" "\\[" "]" "," "++" "#" ":" "=" "==" "!=" "\\\\\(" "λ" "⫽" ")" "&&" "||" "{" "}" "(")))
 (defvar dhall-mode-variables "\\([a-zA-Z_][a-zA-Z_0-9\\-]*\\)[[:space:]]*=")
 
 (defconst dhall-mode-font-lock-keywords 
@@ -233,4 +233,9 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 
 ;; Provide ourselves:
 (provide 'dhall-mode)
+
+;; Local Variables:
+;; coding: utf-8
+;; End:
+
 ;;; dhall-mode.el ends here
