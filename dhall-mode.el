@@ -81,7 +81,7 @@
   (concat "\\_<" (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")) "\\_>"))
 
 (defvar dhall-mode-constants (concat "\\_<" (regexp-opt '("True" "False")) "\\_>"))
-(defvar dhall-mode-numerals "+[1-9]")
+(defvar dhall-mode-numerals "[+\\-][1-9]+")
 (defvar dhall-mode-doubles "[0-9]\.[0-9]+")
 (defvar dhall-mode-operators (regexp-opt '("->" "\\[" "]" "," "++" "#" ":" "=" "==" "!=" "\\\\\(" "λ" "⫽" ")" "&&" "||" "{" "}" "(")))
 (defvar dhall-mode-variables "\\([a-zA-Z_][a-zA-Z_0-9\\-]*\\)[[:space:]]*=")
