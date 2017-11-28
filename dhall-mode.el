@@ -75,15 +75,12 @@
   "Syntax table used while in `dhall-mode'.")
 
 ;; define several category of keywords
-(defvar dhall-mode-keywords (regexp-opt '("if" "then" "else" "let" "in" "using")))
+(defvar dhall-mode-keywords (concat "\\_<" (regexp-opt '("if" "then" "else" "let" "in" "using")) "\\_>"))
 
-(defvar dhall-mode-types 
-  (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
+(defvar dhall-mode-types
+  (concat "\\_<" (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")) "\\_>"))
 
-(defvar dhall-mode-types 
-  (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
-
-(defvar dhall-mode-constants (regexp-opt '("True" "False")))
+(defvar dhall-mode-constants (concat "\\_<" (regexp-opt '("True" "False")) "\\_>"))
 (defvar dhall-mode-numerals "+[1-9]")
 (defvar dhall-mode-doubles "[0-9]\.[0-9]+")
 (defvar dhall-mode-operators "->\\|\\[\\|]\\|,\\|:\\|=\\|\\\\\(\\|)\\|&&\\|||\\|{\\|}\\|(")
