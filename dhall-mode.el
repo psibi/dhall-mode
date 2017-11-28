@@ -43,9 +43,6 @@
 
 (require 'ansi-color)
 
-(defconst dhall-mode-version "0.1.3" 
-  "Dhall Mode version.")
-
 (defgroup dhall nil 
   "Major mode for editing dhall files" 
   :group 'languages 
