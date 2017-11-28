@@ -75,7 +75,7 @@
   "Syntax table used while in `dhall-mode'.")
 
 ;; define several category of keywords
-(defvar dhall-mode-keywords (regexp-opt '("if" "then" "else" "let" "in" "using")))
+(defvar dhall-mode-keywords (concat "\\_<" (regexp-opt '("if" "then" "else" "let" "in" "using")) "\\_>"))
 
 (defvar dhall-mode-types 
   (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")))
