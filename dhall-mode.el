@@ -6,7 +6,7 @@
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: languages
 ;; Version: 0.1.3
-;; Package-Requires: ((emacs "24.4") (ansi-color "3.0"))
+;; Package-Requires: ((emacs "24.4"))
 ;; URL: https://github.com/psibi/dhall-mode
 
 ;; This file is not part of GNU Emacs.
@@ -43,30 +43,27 @@
 
 (require 'ansi-color)
 
-(defconst dhall-mode-version "0.1.3" 
-  "Dhall Mode version.")
-
-(defgroup dhall nil 
-  "Major mode for editing dhall files" 
-  :group 'languages 
-  :prefix "dhall-" 
-  :link '(url-link :tag "Site" "https://github.com/psibi/dhall-mode") 
+(defgroup dhall nil
+  "Major mode for editing dhall files"
+  :group 'languages
+  :prefix "dhall-"
+  :link '(url-link :tag "Site" "https://github.com/psibi/dhall-mode")
   :link '(url-link :tag "Repository" "https://github.com/psibi/dhall-mode"))
 
 ;; Create the syntax table for this mode.
-(defvar dhall-mode-syntax-table 
-  (let ((st (make-syntax-table))) 
-        ;; Taken from haskell-mode: https://stackoverflow.com/a/20845468/1651941
+(defvar dhall-mode-syntax-table
+  (let ((st (make-syntax-table)))
+    ;; Taken from haskell-mode: https://stackoverflow.com/a/20845468/1651941
     (modify-syntax-entry ?\{  "(}1nb" st)
     (modify-syntax-entry ?\}  "){4nb" st)
-    (modify-syntax-entry ?-  "_ 123" st)
+    (modify-syntax-entry ?-  ". 123" st)
     (modify-syntax-entry ?\n ">" st)
-    (modify-syntax-entry ?\  " " st) 
+    (modify-syntax-entry ?\  " " st)
     (modify-syntax-entry ?\t " " st)
-    (modify-syntax-entry ?\[  "(]" st) 
-    (modify-syntax-entry ?\]  ")[" st) 
-    (modify-syntax-entry ?\( "()" st) 
-    (modify-syntax-entry ?\) ")(" st) 
+    (modify-syntax-entry ?\[  "(]" st)
+    (modify-syntax-entry ?\]  ")[" st)
+    (modify-syntax-entry ?\( "()" st)
+    (modify-syntax-entry ?\) ")(" st)
     ;; Let us handle escapes and string
     (modify-syntax-entry ?\\ "." st)
     (modify-syntax-entry ?\" "." st)
@@ -81,85 +78,85 @@
   (concat "\\_<" (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type")) "\\_>"))
 
 (defvar dhall-mode-constants (concat "\\_<" (regexp-opt '("True" "False")) "\\_>"))
-(defvar dhall-mode-numerals "+[1-9]")
+(defvar dhall-mode-numerals "[+\\-][1-9]+")
 (defvar dhall-mode-doubles "[0-9]\.[0-9]+")
-(defvar dhall-mode-operators "->\\|\\[\\|]\\|,\\|:\\|=\\|\\\\\(\\|)\\|&&\\|||\\|{\\|}\\|(")
-(defvar dhall-mode-variables "\\([a-zA-Z]+\\) *\t*=")
+(defvar dhall-mode-operators (regexp-opt '("->" "\\[" "]" "," "++" "#" ":" "=" "==" "!=" "\\\\\(" "λ" "⫽" ")" "&&" "||" "{" "}" "(")))
+(defvar dhall-mode-variables "\\([a-zA-Z_][a-zA-Z_0-9\\-]*\\)[[:space:]]*=")
 
-(defconst dhall-mode-font-lock-keywords 
+(defconst dhall-mode-font-lock-keywords
   `( ;; Variables
-    (,dhall-mode-types . font-lock-type-face) 
-    (,dhall-mode-constants . font-lock-constant-face) 
-    (,dhall-mode-operators . font-lock-builtin-face) 
-    (,dhall-mode-variables . (1 font-lock-variable-name-face)) 
-    (,dhall-mode-keywords . font-lock-keyword-face) 
-    (,dhall-mode-doubles . font-lock-constant-face) 
-    (,dhall-mode-numerals . font-lock-constant-face) 
+    (,dhall-mode-types . font-lock-type-face)
+    (,dhall-mode-constants . font-lock-constant-face)
+    (,dhall-mode-operators . font-lock-builtin-face)
+    (,dhall-mode-variables . (1 font-lock-variable-name-face))
+    (,dhall-mode-keywords . font-lock-keyword-face)
+    (,dhall-mode-doubles . font-lock-constant-face)
+    (,dhall-mode-numerals . font-lock-constant-face)
     ))
 
-(defcustom dhall-format-command "dhall-format" 
+(defcustom dhall-format-command "dhall-format"
   "Command used to format Dhall files.
 Should be dhall or the complete path to your dhall executable,
-  e.g.: /home/sibi/.local/bin/dhall-format" 
-  :type 'file 
-  :group 'dhall 
+  e.g.: /home/sibi/.local/bin/dhall-format"
+  :type 'file
+  :group 'dhall
   :safe 'stringp)
 
-(defcustom dhall-format-at-save t 
-  "If non-nil, the Dhal buffers will be formatted after each save." 
-  :type 'boolean 
-  :group 'dhall 
+(defcustom dhall-format-at-save t
+  "If non-nil, the Dhal buffers will be formatted after each save."
+  :type 'boolean
+  :group 'dhall
   :safe 'booleanp)
 
-(defcustom dhall-format-options '("--inplace") 
-  "Command line options for dhall-format executable." 
-  :type '(repeat string) 
-  :group 'dhall 
+(defcustom dhall-format-options '("--inplace")
+  "Command line options for dhall-format executable."
+  :type '(repeat string)
+  :group 'dhall
   :safe t)
 
-(defun dhall-format () 
-  "Formats the current buffer using dhall-format." 
-  (interactive) 
-  (message "Formatting Dhall file") 
-  (let* ((ext (file-name-extension buffer-file-name t)) 
-         (bufferfile (make-temp-file "dhall" nil ext)) 
-         (curbuf (current-buffer)) 
-         (errbuf (get-buffer-create "*dhall errors*")) 
-         (coding-system-for-read 'utf-8) 
-         (coding-system-for-write 'utf-8)) 
-    (unwind-protect 
-        (save-restriction 
-          (widen) 
-          (write-region nil nil bufferfile) 
-          (with-current-buffer errbuf 
-            (erase-buffer)) 
+(defun dhall-format ()
+  "Formats the current buffer using dhall-format."
+  (interactive)
+  (message "Formatting Dhall file")
+  (let* ((ext (file-name-extension buffer-file-name t))
+         (bufferfile (make-temp-file "dhall" nil ext))
+         (curbuf (current-buffer))
+         (errbuf (get-buffer-create "*dhall errors*"))
+         (coding-system-for-read 'utf-8)
+         (coding-system-for-write 'utf-8))
+    (unwind-protect
+        (save-restriction
+          (widen)
+          (write-region nil nil bufferfile)
+          (with-current-buffer errbuf
+            (erase-buffer))
           (apply 'call-process dhall-format-command nil errbuf t (append dhall-format-options (list
-                                                                                               (buffer-file-name)))) 
-          (with-current-buffer errbuf 
-            (save-restriction 
-              (widen) 
-              (let* ((errContent 
-                      (buffer-substring-no-properties 
-                       (point-min) 
-                       (point-max))) 
-                     (errLength (length errContent))) 
-                (if (eq errLength 0) 
+                                                                                               (buffer-file-name))))
+          (with-current-buffer errbuf
+            (save-restriction
+              (widen)
+              (let* ((errContent
+                      (buffer-substring-no-properties
+                       (point-min)
+                       (point-max)))
+                     (errLength (length errContent)))
+                (if (eq errLength 0)
                     (progn
                       ;; (delete-window (get-buffer-window errbuf))
-                      (with-current-buffer curbuf 
-                        (revert-buffer 
-                         :ignore-auto 
+                      (with-current-buffer curbuf
+                        (revert-buffer
+                         :ignore-auto
 
-                         :noconfirm 
-                         :preserve-modes))) 
-                  (progn 
-                    (ansi-color-apply-on-region (point-min) 
-                                                (point-max)) 
-                    (display-buffer errbuf))))))) 
+                         :noconfirm
+                         :preserve-modes)))
+                  (progn
+                    (ansi-color-apply-on-region (point-min)
+                                                (point-max))
+                    (display-buffer errbuf)))))))
       (delete-file bufferfile))))
 
-(defun dhall-format-maybe () 
-  "Run `dhall-format' if `dhall-format-at-save' is non-nil." 
+(defun dhall-format-maybe ()
+  "Run `dhall-format' if `dhall-format-at-save' is non-nil."
   (if dhall-format-at-save
       (dhall-format)))
 
@@ -190,14 +187,14 @@ STRING-TYPE type of string based off of Emacs syntax table types"
     (dhall--mark-string pos ?\")))
 
 (defun dhall--single-quotes ()
-  "Handle Dhall single quotes"
+  "Handle Dhall single quotes."
   (let* ((pos (match-beginning 0))
-          (ps (dhall--get-parse-state pos))
-          (string-type (dhall--get-string-type ps)))
+         (ps (dhall--get-parse-state pos))
+         (string-type (dhall--get-string-type ps)))
     (dhall--mark-string pos ?\")))
 
 (defun dhall-syntax-propertize (start end)
-  "Special syntax properties for Dhall from START to END"
+  "Special syntax properties for Dhall from START to END."
   (goto-char start)
   (remove-text-properties start end '(syntax-table nil dhall-string-type nil))
   (funcall
@@ -205,26 +202,24 @@ STRING-TYPE type of string based off of Emacs syntax table types"
     ("'\\{2,\\}"
      (0 (ignore (dhall--single-quotes))))
     ("\""
-     (0 (ignore (dhall--double-quotes))))
-    )start end))
+     (0 (ignore (dhall--double-quotes)))))
+   start end))
 
 ;; The main mode functions
 ;;;###autoload
-(define-derived-mode dhall-mode prog-mode 
+(define-derived-mode dhall-mode prog-mode
   "Dhall"
-  "Major mode for editing Dhall files." 
-  :group 'dhall 
+  "Major mode for editing Dhall files."
+  :group 'dhall
   :syntax-table dhall-mode-syntax-table
   (setq font-lock-defaults '(dhall-mode-font-lock-keywords))
-  (setq-local indent-tabs-mode t) 
-  (setq-local tab-width 4) 
+  (setq-local indent-tabs-mode t)
+  (setq-local tab-width 4)
   (setq-local comment-start "-- ")
   (setq-local comment-end "")
   ;; Special syntax properties for Dhall
   (setq-local syntax-propertize-function 'dhall-syntax-propertize)
-  
-  ;; Look at text properties when parsing
-  ;; (setq-local parse-sexp-lookup-properties t)
+
   (add-hook 'after-save-hook 'dhall-format-maybe nil t))
 
 ;; Automatically use dhall-mode for .dhall files.
@@ -233,4 +228,9 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 
 ;; Provide ourselves:
 (provide 'dhall-mode)
+
+;; Local Variables:
+;; coding: utf-8
+;; End:
+
 ;;; dhall-mode.el ends here
