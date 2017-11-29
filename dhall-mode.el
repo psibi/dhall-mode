@@ -202,8 +202,8 @@ STRING-TYPE type of string based off of Emacs syntax table types"
     ("'\\{2,\\}"
      (0 (ignore (dhall--single-quotes))))
     ("\""
-     (0 (ignore (dhall--double-quotes))))
-    )start end))
+     (0 (ignore (dhall--double-quotes)))))
+   start end))
 
 ;; The main mode functions
 ;;;###autoload
