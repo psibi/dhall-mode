@@ -94,6 +94,20 @@
     (,dhall-mode-numerals . font-lock-constant-face)
     ))
 
+(defcustom dhall-command "dhall"
+  "Command used to normalize Dhall files.
+Should be dhall or the complete path to your dhall executable,
+  e.g.: /home/sibi/.local/bin/dhall"
+  :type 'file
+  :group 'dhall
+  :safe 'stringp)
+
+(defcustom dhall-use-header-line t
+  "If non-nil, the Dhall buffers will have the Type of the file displayed at the top of the window."
+  :type 'boolean
+  :group 'dhall
+  :safe 'booleanp)
+
 (defcustom dhall-format-command "dhall-format"
   "Command used to format Dhall files.
 Should be dhall or the complete path to your dhall executable,
@@ -103,7 +117,7 @@ Should be dhall or the complete path to your dhall executable,
   :safe 'stringp)
 
 (defcustom dhall-format-at-save t
-  "If non-nil, the Dhal buffers will be formatted after each save."
+  "If non-nil, the Dhall buffers will be formatted after each save."
   :type 'boolean
   :group 'dhall
   :safe 'booleanp)
@@ -113,6 +127,20 @@ Should be dhall or the complete path to your dhall executable,
   :type '(repeat string)
   :group 'dhall
   :safe t)
+
+(defun dhall-file-type (file)
+  "Returns the type of the expression in the file."
+  (interactive (list (read-file-name "File name: " buffer-file-name)))
+  (let ((type (car (split-string (shell-command-to-string
+                                  (concat dhall-command
+                                          " --plain <<< "
+                                          file
+                                          " 2>&1 >/dev/null"))
+                                 "[]+"
+                                 t
+                                 split-string-default-separators))))
+    ;; terrible way to catch errors
+    (if (string-match-p "↳" type) nil type)))
 
 (defun dhall-format ()
   "Formats the current buffer using dhall-format."
@@ -212,6 +240,14 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   "Major mode for editing Dhall files."
   :group 'dhall
   :syntax-table dhall-mode-syntax-table
+  (if dhall-use-header-line
+      (setq header-line-format
+            '((:eval (let ((type (dhall-file-type buffer-file-name)))
+                       (if type
+                           (if (<= (length type) (window-width))
+                               type
+                             "Type too long.")
+                         "Normalization error."))))))
   (setq font-lock-defaults '(dhall-mode-font-lock-keywords))
   (setq-local indent-tabs-mode t)
   (setq-local tab-width 4)
