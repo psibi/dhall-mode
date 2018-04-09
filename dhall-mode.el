@@ -131,16 +131,14 @@ Should be dhall or the complete path to your dhall executable,
 (defun dhall-file-type (file)
   "Returns the type of the expression in the file."
   (interactive (list (read-file-name "File name: " buffer-file-name)))
-  (let ((type (car (split-string (shell-command-to-string
-                                  (concat dhall-command
-                                          " --plain <<< "
-                                          file
-                                          " 2>&1 >/dev/null"))
-                                 "[]+"
-                                 t
-                                 split-string-default-separators))))
+  (let* ((type-command (concat dhall-command " <<< " file " 2>&1 >/dev/null"))
+         (type (car (split-string (shell-command-to-string type-command)
+                                  "[]+"
+                                  t
+                                  split-string-default-separators))))
     ;; terrible way to catch errors
-    (if (string-match-p "↳" type) nil type)))
+    (unless (string-match-p "↳" type)
+      (ansi-color-apply (replace-regexp-in-string "\n" " " type)))))
 
 (defun dhall-format ()
   "Formats the current buffer using dhall-format."
