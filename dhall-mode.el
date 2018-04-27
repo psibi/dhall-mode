@@ -129,7 +129,7 @@ Should be dhall or the complete path to your dhall executable,
   :safe t)
 
 (defun dhall-file-type (file)
-  "Returns the type of the expression in the file."
+  "Returns the type of the expression in FILE."
   (interactive (list (read-file-name "File name: " buffer-file-name)))
   (let* ((type-command (concat dhall-command " <<< " file " 2>&1 >/dev/null"))
          (type (car (split-string (shell-command-to-string type-command)
@@ -231,6 +231,25 @@ STRING-TYPE type of string based off of Emacs syntax table types"
      (0 (ignore (dhall--double-quotes)))))
    start end))
 
+(defvar-local dhall-buffer-type nil)
+(defvar-local dhall-buffer-type-compute-timer nil)
+
+(defun dhall-buffer-type-compute ()
+  "Recompute `dhall-buffer-type'."
+  (let ((type (dhall-file-type buffer-file-name)))
+    (setq dhall-buffer-type
+          (if type
+              (if (<= (length type) (window-width))
+                  type
+                "Type too long.")
+            "Normalization error."))))
+
+(defun dhall-after-change (_beg _end _length)
+  "Called after any change in the buffer."
+  (when dhall-buffer-type-compute-timer
+    (cancel-timer dhall-buffer-type-compute-timer))
+  (setq dhall-buffer-type-compute-timer (run-at-time 1 nil 'dhall-buffer-type-compute)))
+
 ;; The main mode functions
 ;;;###autoload
 (define-derived-mode dhall-mode prog-mode
@@ -238,14 +257,10 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   "Major mode for editing Dhall files."
   :group 'dhall
   :syntax-table dhall-mode-syntax-table
-  (if dhall-use-header-line
-      (setq header-line-format
-            '((:eval (let ((type (dhall-file-type buffer-file-name)))
-                       (if type
-                           (if (<= (length type) (window-width))
-                               type
-                             "Type too long.")
-                         "Normalization error."))))))
+  (when dhall-use-header-line
+    (setq header-line-format
+          '((:eval dhall-buffer-type)))
+    (dhall-buffer-type-compute))
   (setq font-lock-defaults '(dhall-mode-font-lock-keywords))
   (setq-local indent-tabs-mode t)
   (setq-local tab-width 4)
@@ -253,7 +268,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   (setq-local comment-end "")
   ;; Special syntax properties for Dhall
   (setq-local syntax-propertize-function 'dhall-syntax-propertize)
-
+  (add-hook 'after-change-functions 'dhall-after-change nil t)
   (add-hook 'after-save-hook 'dhall-format-maybe nil t))
 
 ;; Automatically use dhall-mode for .dhall files.
