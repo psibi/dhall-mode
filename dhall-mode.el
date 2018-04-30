@@ -128,17 +128,19 @@ Should be dhall or the complete path to your dhall executable,
   :group 'dhall
   :safe t)
 
-(defun dhall-file-type (file)
-  "Returns the type of the expression in FILE."
-  (interactive (list (read-file-name "File name: " buffer-file-name)))
-  (let* ((type-command (concat dhall-command " <<< " file " 2>&1 >/dev/null"))
-         (type (car (split-string (shell-command-to-string type-command)
-                                  "[]+"
-                                  t
-                                  split-string-default-separators))))
-    ;; terrible way to catch errors
-    (unless (string-match-p "↳" type)
-      (ansi-color-apply (replace-regexp-in-string "\n" " " type)))))
+(defun dhall-buffer-type ()
+  "Return the type of the expression in the current buffer."
+  (interactive)
+  (let ((stderr (make-temp-name "dhall-buffer-type")))
+    (call-process-region (point-min) (point-max) dhall-command nil (list nil stderr))
+    (let ((type (car (split-string (with-temp-buffer
+                                     (insert-file-contents stderr)
+                                     (buffer-string))
+                                   "[]+"
+                                   t
+                                   split-string-default-separators))))
+      (unless (string-match-p "↳" type)
+        (ansi-color-apply (replace-regexp-in-string "\n" " " type))))))
 
 (defun dhall-format ()
   "Formats the current buffer using dhall-format."
@@ -208,8 +210,8 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 (defun dhall--double-quotes ()
   "Handle Dhall double quotes."
   (let* ((pos (match-beginning 0))
-          (ps (dhall--get-parse-state pos))
-          (string-type (dhall--get-string-type ps)))
+         (ps (dhall--get-parse-state pos))
+         (string-type (dhall--get-string-type ps)))
     (dhall--mark-string pos ?\")))
 
 (defun dhall--single-quotes ()
@@ -236,7 +238,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 
 (defun dhall-buffer-type-compute ()
   "Recompute `dhall-buffer-type'."
-  (let ((type (dhall-file-type buffer-file-name)))
+  (let ((type (dhall-buffer-type)))
     (setq dhall-buffer-type
           (if type
               (if (<= (length type) (window-width))
