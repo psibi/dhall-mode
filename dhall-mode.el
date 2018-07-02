@@ -141,7 +141,7 @@ Should be dhall or the complete path to your dhall executable,
                                    split-string-default-separators))))
       (delete-file stderr)
       (unless (string-match-p "↳" type)
-        (ansi-color-apply (replace-regexp-in-string "\n" " " type))))))
+        (ansi-color-apply (replace-regexp-in-string "[\n\s]+" " " type))))))
 
 (defun dhall-format ()
   "Formats the current buffer using dhall-format."
@@ -244,7 +244,10 @@ STRING-TYPE type of string based off of Emacs syntax table types"
           (if type
               (if (<= (length type) (window-width))
                   type
-                "Type too long.")
+                (concat
+                 (substring type 0
+                            (- (window-width) 10))
+                 "..."))
             "Normalization error."))))
 
 (defun dhall-after-change (_beg _end _length)
