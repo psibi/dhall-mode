@@ -131,17 +131,20 @@ Should be dhall or the complete path to your dhall executable,
 (defun dhall-buffer-type ()
   "Return the type of the expression in the current buffer."
   (interactive)
-  (let ((stderr (make-temp-file "dhall-buffer-type")))
-    (when (zerop (call-process-region (point-min) (point-max) dhall-command nil (list nil stderr)))
-      (let ((type (car (split-string (with-temp-buffer
-                                       (insert-file-contents stderr)
-                                       (buffer-string))
-                                     "[]+"
-                                     t
-                                     split-string-default-separators))))
-        (delete-file stderr)
-        (unless (string-match-p "↳" type)
-          (ansi-color-apply (replace-regexp-in-string "[\n\s]+" " " type)))))))
+  (when (executable-find dhall-command)
+    (let ((stderr (make-temp-file "dhall-buffer-type")))
+      (unwind-protect
+          (when (zerop (call-process-region (point-min) (point-max) dhall-command nil (list nil stderr)))
+            (let ((type (car (split-string (with-temp-buffer
+                                             (insert-file-contents stderr)
+                                             (buffer-string))
+                                           "[]+"
+                                           t
+                                           split-string-default-separators))))
+
+              (unless (string-match-p "↳" type)
+                (ansi-color-apply (replace-regexp-in-string "[\n\s]+" " " type)))))
+        (delete-file stderr)))))
 
 (defun dhall-format ()
   "Formats the current buffer using dhall-format."
@@ -250,7 +253,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
                  "..."))
             (propertize "Error determining type." 'face 'error)))))
 
-(defun dhall-after-change (_beg _end _length)
+(defun dhall-after-change (&optional _beg _end _length)
   "Called after any change in the buffer."
   (when dhall-buffer-type-compute-timer
     (cancel-timer dhall-buffer-type-compute-timer))
@@ -266,7 +269,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   (when dhall-use-header-line
     (setq header-line-format
           '((:eval dhall-buffer-type)))
-    (dhall-buffer-type-compute))
+    (dhall-after-change))
   (setq font-lock-defaults '(dhall-mode-font-lock-keywords))
   (setq-local indent-tabs-mode t)
   (setq-local tab-width 4)
