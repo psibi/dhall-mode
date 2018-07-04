@@ -132,16 +132,16 @@ Should be dhall or the complete path to your dhall executable,
   "Return the type of the expression in the current buffer."
   (interactive)
   (let ((stderr (make-temp-file "dhall-buffer-type")))
-    (call-process-region (point-min) (point-max) dhall-command nil (list nil stderr))
-    (let ((type (car (split-string (with-temp-buffer
-                                     (insert-file-contents stderr)
-                                     (buffer-string))
-                                   "[]+"
-                                   t
-                                   split-string-default-separators))))
-      (delete-file stderr)
-      (unless (string-match-p "↳" type)
-        (ansi-color-apply (replace-regexp-in-string "[\n\s]+" " " type))))))
+    (when (zerop (call-process-region (point-min) (point-max) dhall-command nil (list nil stderr)))
+      (let ((type (car (split-string (with-temp-buffer
+                                       (insert-file-contents stderr)
+                                       (buffer-string))
+                                     "[]+"
+                                     t
+                                     split-string-default-separators))))
+        (delete-file stderr)
+        (unless (string-match-p "↳" type)
+          (ansi-color-apply (replace-regexp-in-string "[\n\s]+" " " type)))))))
 
 (defun dhall-format ()
   "Formats the current buffer using dhall-format."
@@ -248,7 +248,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
                  (substring type 0
                             (- (window-width) 10))
                  "..."))
-            "Normalization error."))))
+            (propertize "Error determining type." 'face 'error)))))
 
 (defun dhall-after-change (_beg _end _length)
   "Called after any change in the buffer."
