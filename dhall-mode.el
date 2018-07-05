@@ -108,14 +108,6 @@ Should be dhall or the complete path to your dhall executable,
   :group 'dhall
   :safe 'booleanp)
 
-(defcustom dhall-format-command "dhall-format"
-  "Command used to format Dhall files.
-Should be dhall or the complete path to your dhall executable,
-  e.g.: /home/sibi/.local/bin/dhall-format"
-  :type 'file
-  :group 'dhall
-  :safe 'stringp)
-
 (defcustom dhall-format-at-save t
   "If non-nil, the Dhall buffers will be formatted after each save."
   :type 'boolean
@@ -159,8 +151,10 @@ Should be dhall or the complete path to your dhall executable,
           (write-region nil nil bufferfile)
           (with-current-buffer errbuf
             (erase-buffer))
-          (apply 'call-process dhall-format-command nil errbuf t (append dhall-format-options (list
-                                                                                               (buffer-file-name))))
+          (apply 'call-process dhall-command nil errbuf t
+                 (cons "format"
+                       (append dhall-format-options (list
+                                                     (buffer-file-name)))))
           (with-current-buffer errbuf
             (save-restriction
               (widen)
