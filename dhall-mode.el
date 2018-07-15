@@ -110,7 +110,8 @@ Should be dhall or the complete path to your dhall executable,
 
 (defcustom dhall-format-command "dhall-format"
   "Command used to format Dhall files.
-If not specified \"dhall format\" will be used.
+If your dhall command is new and supports the \"format\" sub-command,
+then set this to nil.  This will become the default later.
 
 If specified, this should be the complete path to your dhall-format executable,
   e.g.: /home/sibi/.local/bin/dhall-format"
