@@ -2,6 +2,9 @@
 
 ;; Copyright (C) 2018 Patrick D. Elliott
 
+;; Author: Patrick D. Elliott <patrick.d.elliott@gmail.com>
+;; Keywords: Languages
+
 ;; This file is not part of GNU Emacs.
 
 ;; This file is free software; you can redistribute it and/or modify
