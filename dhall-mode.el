@@ -42,6 +42,15 @@
 ;;; Code:
 
 (require 'ansi-color)
+(require 'dhall-repl)
+
+(defvar dhall-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-b") 'dhall-repl-show)
+    (define-key map (kbd "C-c C-f") 'dhall-format)
+    (define-key map (kbd "C-c C-t") 'dhall-buffer-type)
+    map)
+"Keymap for using `dhall-mode'.")
 
 (defgroup dhall nil
   "Major mode for editing dhall files"
@@ -272,6 +281,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   "Dhall"
   "Major mode for editing Dhall files."
   :group 'dhall
+  :keymap dhall-mode-map
   :syntax-table dhall-mode-syntax-table
   (when dhall-use-header-line
     (setq header-line-format
