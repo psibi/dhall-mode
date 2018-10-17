@@ -131,6 +131,12 @@ If specified, this should be the complete path to your dhall-format executable,
   :group 'dhall
   :safe t)
 
+(defcustom dhall-type-check-inactivity-timeout 1
+  "How long to wait in seconds between inactivity in the buffer before evaluating the buffer type. You can try increasing this if type checking is slowing things down. You can also disable type-checking entirely by setting dhall-use-header-line to nil."
+  :type 'number
+  :group 'dhall
+  :safe 'numberp)
+
 (defun dhall-buffer-type ()
   "Return the type of the expression in the current buffer."
   (interactive)
@@ -262,9 +268,10 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 
 (defun dhall-after-change (&optional _beg _end _length)
   "Called after any change in the buffer."
-  (when dhall-buffer-type-compute-timer
+  (when dhall-use-header-line
+    (when dhall-buffer-type-compute-timer
     (cancel-timer dhall-buffer-type-compute-timer))
-  (setq dhall-buffer-type-compute-timer (run-at-time 1 nil 'dhall-buffer-type-compute)))
+  (setq dhall-buffer-type-compute-timer (run-at-time dhall-type-check-inactivity-timeout nil 'dhall-buffer-type-compute))))
 
 ;; The main mode functions
 ;;;###autoload
