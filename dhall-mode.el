@@ -132,7 +132,7 @@ If specified, this should be the complete path to your dhall-format executable,
   :safe t)
 
 (defcustom dhall-type-check-inactivity-timeout 1
-  "How long to wait in seconds between inactivity in the buffer before evaluating the buffer type. You can try increasing this if type checking is slowing things down. You can also disable type-checking entirely by setting dhall-use-header-line to nil."
+  "How long to wait in seconds between inactivity in the buffer before evaluating the buffer type.  You can try increasing this if type checking is slowing things down.  You can also disable type-checking entirely by setting dhall-use-header-line to nil."
   :type 'number
   :group 'dhall
   :safe 'numberp)
