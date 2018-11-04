@@ -160,7 +160,7 @@ If specified, this should be the complete path to your dhall-format executable,
                                            t
                                            split-string-default-separators))))
 
-              (unless (string-match-p "↳" type)
+              (unless (and type (string-match-p "↳" type))
                 (ansi-color-apply (replace-regexp-in-string "[\n\s]+" " " type)))))
         (delete-file stderr)))))
 
