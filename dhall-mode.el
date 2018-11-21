@@ -117,10 +117,10 @@ Should be dhall or the complete path to your dhall executable,
   :group 'dhall
   :safe 'booleanp)
 
-(defcustom dhall-format-command "dhall-format"
+(defcustom dhall-format-command nil
   "Command used to format Dhall files.
-If your dhall command is new and supports the \"format\" sub-command,
-then set this to nil.  This will become the default later.
+If your dhall command is old and does not support the \"format\" sub-command,
+then set this to \"dhall-format\".  This will become the default later.
 
 If specified, this should be the complete path to your dhall-format executable,
   e.g.: /home/sibi/.local/bin/dhall-format"
