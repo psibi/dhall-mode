@@ -150,19 +150,18 @@ If specified, this should be the complete path to your dhall-format executable,
   "Return the type of the expression in the current buffer."
   (interactive)
   (when (executable-find dhall-command)
-    (let ((stderr (make-temp-file "dhall-buffer-type")))
-      (unwind-protect
-          (when (zerop (call-process-region (point-min) (point-max) dhall-command nil (list nil stderr)))
-            (let ((type (car (split-string (with-temp-buffer
-                                             (insert-file-contents stderr)
-                                             (buffer-string))
-                                           "[]+"
-                                           t
-                                           split-string-default-separators))))
-
-              (unless (and type (string-match-p "↳" type))
-                (ansi-color-apply (replace-regexp-in-string "[\n\s]+" " " type)))))
-        (delete-file stderr)))))
+    (let ((errbuf (get-buffer-create "*dhall-buffer-type-errors*"))
+          (source (buffer-string)))
+      (with-temp-buffer
+        (with-current-buffer errbuf
+          (erase-buffer))
+        (insert source)
+        (when (zerop (shell-command-on-region (point-min)
+                                              (point-max)
+                                              (concat dhall-command " resolve|" dhall-command " type")
+                                              nil t errbuf t))
+          (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
+                                    (replace-regexp-in-string "[[:space:]][[:space:]]+" " " (buffer-string))))))))
 
 (defun dhall-format ()
   "Formats the current buffer using dhall-format."
