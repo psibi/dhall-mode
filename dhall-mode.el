@@ -134,12 +134,6 @@ If specified, this should be the complete path to your dhall-format executable,
   :group 'dhall
   :safe 'booleanp)
 
-(defcustom dhall-format-options '("--inplace")
-  "Command line options for dhall-format executable."
-  :type '(repeat string)
-  :group 'dhall
-  :safe t)
-
 (defcustom dhall-type-check-inactivity-timeout 1
   "How long to wait in seconds between inactivity in the buffer before evaluating the buffer type.  You can try increasing this if type checking is slowing things down.  You can also disable type-checking entirely by setting dhall-use-header-line to nil."
   :type 'number
@@ -163,50 +157,36 @@ If specified, this should be the complete path to your dhall-format executable,
           (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
                                     (replace-regexp-in-string "[[:space:]][[:space:]]+" " " (buffer-string))))))))
 
-(defun dhall-format ()
-  "Formats the current buffer using dhall-format."
-  (interactive)
+(defun dhall-format (&optional is-interactive)
+  "Formats the current buffer using dhall-format.
+When called interactively, or with prefix argument
+IS-INTERACTIVE, show a buffer if the formatting fails."
+  (interactive "p")
   (message "Formatting Dhall file")
-  (let* ((ext (file-name-extension buffer-file-name t))
-         (bufferfile (make-temp-file "dhall" nil ext))
-         (curbuf (current-buffer))
-         (errbuf (get-buffer-create "*dhall errors*"))
+  (let* ((err-file (make-temp-file "dhall-format"))
+         (out-file (make-temp-file "dhall-format"))
          (coding-system-for-read 'utf-8)
          (coding-system-for-write 'utf-8))
     (unwind-protect
-        (save-restriction
-          (widen)
-          (write-region nil nil bufferfile)
-          (with-current-buffer errbuf
-            (erase-buffer))
-          (apply 'call-process (or dhall-format-command "dhall") nil errbuf t
-                 (append
-                  (unless dhall-format-command
-                    '("format"))
-                  dhall-format-options (list
-                                        (buffer-file-name))))
-          (with-current-buffer errbuf
-            (save-restriction
-              (widen)
-              (let* ((errContent
-                      (buffer-substring-no-properties
-                       (point-min)
-                       (point-max)))
-                     (errLength (length errContent)))
-                (if (eq errLength 0)
-                    (progn
-                      ;; (delete-window (get-buffer-window errbuf))
-                      (with-current-buffer curbuf
-                        (revert-buffer
-                         :ignore-auto
-
-                         :noconfirm
-                         :preserve-modes)))
-                  (progn
-                    (ansi-color-apply-on-region (point-min)
-                                                (point-max))
-                    (display-buffer errbuf)))))))
-      (delete-file bufferfile))))
+        (let* ((command (or dhall-format-command dhall-command))
+               (error-buffer (get-buffer-create "*dhall-format errors*"))
+               (retcode
+                (apply 'call-process-region (point-min) (point-max) command
+                       nil (list (list :file out-file) err-file)
+                       nil
+                       (unless dhall-format-command '("format")))))
+          (with-current-buffer error-buffer
+            (read-only-mode 0)
+            (insert-file-contents err-file nil nil nil t)
+            (ansi-color-apply-on-region (point-min) (point-max))
+            (special-mode))
+          (if (eq retcode 0)
+              (insert-file-contents out-file nil nil nil t)
+            (if is-interactive
+                (display-buffer error-buffer)
+              (message "dhall-format failed: see %s" (buffer-name error-buffer)))))
+      (delete-file err-file)
+      (delete-file out-file))))
 
 (defun dhall-format-maybe ()
   "Run `dhall-format' if `dhall-format-at-save' is non-nil."
