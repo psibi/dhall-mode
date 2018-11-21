@@ -155,7 +155,7 @@ If specified, this should be the complete path to your dhall-format executable,
                                               (concat dhall-command " resolve|" dhall-command " type")
                                               nil t errbuf t))
           (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
-                                    (replace-regexp-in-string "[[:space:]][[:space:]]+" " " (buffer-string))))))))
+                                    (replace-regexp-in-string "[[:space:]]+" " " (buffer-string))))))))
 
 (defun dhall-format (&optional is-interactive)
   "Formats the current buffer using dhall-format.
