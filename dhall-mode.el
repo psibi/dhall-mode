@@ -281,7 +281,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   ;; Special syntax properties for Dhall
   (setq-local syntax-propertize-function 'dhall-syntax-propertize)
   (add-hook 'after-change-functions 'dhall-after-change nil t)
-  (add-hook 'after-save-hook 'dhall-format-maybe nil t))
+  (add-hook 'before-save-hook 'dhall-format-maybe nil t))
 
 ;; Automatically use dhall-mode for .dhall files.
 ;;;###autoload
