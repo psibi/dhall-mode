@@ -243,25 +243,29 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 (defvar-local dhall-buffer-type nil)
 (defvar-local dhall-buffer-type-compute-timer nil)
 
-(defun dhall-buffer-type-compute ()
-  "Recompute `dhall-buffer-type'."
-  (let ((type (dhall-buffer-type)))
-    (setq dhall-buffer-type
-          (if type
-              (if (<= (length type) (window-width))
-                  type
-                (concat
-                 (substring type 0
-                            (- (window-width) 10))
-                 "..."))
-            (propertize "Error determining type." 'face 'error)))))
+(defun dhall-buffer-type-compute (buffer)
+  "Recompute `dhall-buffer-type' in BUFFER."
+  (with-current-buffer buffer
+    (let ((type (dhall-buffer-type)))
+      (setq dhall-buffer-type
+            (if type
+                (if (<= (length type) (window-width))
+                    type
+                  (concat
+                   (substring type 0
+                              (- (window-width) 10))
+                   "..."))
+              (propertize "Error determining type." 'face 'error))))))
 
 (defun dhall-after-change (&optional _beg _end _length)
   "Called after any change in the buffer."
   (when dhall-use-header-line
     (when dhall-buffer-type-compute-timer
-    (cancel-timer dhall-buffer-type-compute-timer))
-  (setq dhall-buffer-type-compute-timer (run-at-time dhall-type-check-inactivity-timeout nil 'dhall-buffer-type-compute))))
+      (cancel-timer dhall-buffer-type-compute-timer))
+    (setq dhall-buffer-type-compute-timer
+          (run-at-time dhall-type-check-inactivity-timeout
+                       nil
+                       (apply-partially 'dhall-buffer-type-compute (current-buffer))))))
 
 ;; The main mode functions
 ;;;###autoload
