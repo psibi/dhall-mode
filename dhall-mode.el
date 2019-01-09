@@ -150,12 +150,16 @@ If specified, this should be the complete path to your dhall-format executable,
         (with-current-buffer errbuf
           (erase-buffer))
         (insert source)
-        (when (zerop (shell-command-on-region (point-min)
-                                              (point-max)
-                                              (concat dhall-command " resolve|" dhall-command " type")
-                                              nil t errbuf t))
-          (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
-                                    (replace-regexp-in-string "[[:space:]]+" " " (buffer-string))))))))
+        (if (zerop (shell-command-on-region (point-min)
+                                            (point-max)
+                                            (concat dhall-command " resolve|" dhall-command " type")
+                                            nil t errbuf t))
+            (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
+                                      (replace-regexp-in-string "[[:space:]]+" " " (buffer-string)))
+          (prog1
+              nil
+            (with-current-buffer errbuf
+              (ansi-color-apply-on-region (point-min) (point-max)))))))))
 
 (defun dhall-format (&optional is-interactive)
   "Formats the current buffer using dhall-format.
