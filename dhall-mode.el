@@ -120,7 +120,7 @@ Should be dhall or the complete path to your dhall executable,
 (defcustom dhall-format-command nil
   "Command used to format Dhall files.
 If your dhall command is old and does not support the \"format\" sub-command,
-then set this to \"dhall-format\".  This will become the default later.
+then set this to \"dhall-format\".
 
 If specified, this should be the complete path to your dhall-format executable,
   e.g.: /home/sibi/.local/bin/dhall-format"
