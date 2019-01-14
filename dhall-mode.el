@@ -6,7 +6,7 @@
 ;; Maintainer: Sibi Prabakaran <sibi@psibi.in>
 ;; Keywords: languages
 ;; Version: 0.1.3
-;; Package-Requires: ((emacs "24.4") (reformatter "0.1"))
+;; Package-Requires: ((emacs "24.4") (reformatter "0.3"))
 ;; URL: https://github.com/psibi/dhall-mode
 
 ;; This file is not part of GNU Emacs.
@@ -48,7 +48,7 @@
 (defvar dhall-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-b") 'dhall-repl-show)
-    (define-key map (kbd "C-c C-f") 'dhall-format)
+    (define-key map (kbd "C-c C-f") 'dhall-format-buffer)
     (define-key map (kbd "C-c C-t") 'dhall-buffer-type)
     map)
   "Keymap for using `dhall-mode'.")
@@ -172,16 +172,19 @@ down.  You can also disable type-checking entirely by setting
 (reformatter-define dhall-format
   :program (or dhall-format-command dhall-command)
   :args (unless dhall-format-command '("format"))
+  :group 'dhall
   :lighter " DhFmt")
 
 (reformatter-define dhall-freeze
   :program dhall-command
   :args '("freeze")
+  :group 'dhall
   :lighter " DhFreeze")
 
 (reformatter-define dhall-lint
   :program dhall-command
   :args '("lint")
+  :group 'dhall
   :lighter " DhLint")
 
 (defun dhall--get-parse-state (pos)
