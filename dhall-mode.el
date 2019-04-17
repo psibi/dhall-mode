@@ -156,6 +156,7 @@ down.  You can also disable type-checking entirely by setting
             (source (buffer-string)))
         (with-temp-buffer
           (with-current-buffer errbuf
+            (read-only-mode -1)
             (erase-buffer))
           (insert source)
           (if (zerop (shell-command-on-region (point-min)
@@ -167,7 +168,8 @@ down.  You can also disable type-checking entirely by setting
             (prog1
                 nil
               (with-current-buffer errbuf
-                (ansi-color-apply-on-region (point-min) (point-max))))))))))
+                (ansi-color-apply-on-region (point-min) (point-max))
+                (view-mode)))))))))
 
 (reformatter-define dhall-format
   :program (or dhall-format-command dhall-command)
