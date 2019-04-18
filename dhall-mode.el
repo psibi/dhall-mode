@@ -87,14 +87,18 @@
 (defvar dhall-mode-types
   (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type") 'symbols))
 
-(defvar dhall-mode-constants (regexp-opt '("True" "False") 'symbols))
-(defvar dhall-mode-numerals "[+\\-][1-9]+")
-(defvar dhall-mode-doubles "[0-9]\.[0-9]+")
-(defvar dhall-mode-operators (regexp-opt '("->" "\\[" "]" "," "++" "#" ":" "=" "==" "!=" "\\\\\(" "λ" "⫽" ")" "&&" "||" "{" "}" "(")))
-(defvar dhall-mode-variables "\\([a-zA-Z_][a-zA-Z_0-9\\-]*\\)[[:space:]]*=")
+(defconst dhall-mode-constants (regexp-opt '("True" "False") 'symbols))
+(defconst dhall-mode-numerals "\\_<[+\\-][1-9]+\\_>")
+(defconst dhall-mode-doubles "\\_<[+\\-]?[0-9]+\.[0-9]+\\_>")
+(defconst dhall-mode-operators (regexp-opt '("->" "\\[" "]" "," "++" "#" ":" "=" "==" "!=" "\\\\\(" "λ" "⫽" ")" "&&" "||" "{" "}" "(")))
+(defconst dhall-mode-variables "\\([a-zA-Z_][a-zA-Z_0-9\\-]*\\)[[:space:]]*=")
+(defconst dhall-mode-urls "\\_<\\(?:https?\\|file\\):[^[:space:]]+")
+(defconst dhall-mode-shas "\\_<sha256:[a-f0-9]+\\_>")
 
 (defconst dhall-mode-font-lock-keywords
   `( ;; Variables
+    (,dhall-mode-urls . font-lock-function-name-face)
+    (,dhall-mode-shas . font-lock-constant-face)
     (,dhall-mode-types . font-lock-type-face)
     (,dhall-mode-constants . font-lock-constant-face)
     (,dhall-mode-operators . font-lock-builtin-face)
