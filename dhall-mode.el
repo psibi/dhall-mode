@@ -139,6 +139,12 @@ If specified, this should be the complete path to your dhall-format executable,
   :group 'dhall
   :safe 'booleanp)
 
+(defcustom dhall-format-arguments nil
+  "Provide a list of arguments for the formatter e.g. '(\"--ascii\")."
+  :type 'list
+  :group 'dhall
+  :safe 'listp)
+
 (defcustom dhall-type-check-inactivity-timeout 1
   "Wait for this period of inactivity before refreshing the buffer type.
 You can try increasing this if type checking is slowing things
@@ -177,7 +183,7 @@ down.  You can also disable type-checking entirely by setting
 
 (reformatter-define dhall-format
   :program (or dhall-format-command dhall-command)
-  :args (unless dhall-format-command '("format"))
+  :args (append (unless dhall-format-command '("format")) dhall-format-arguments)
   :group 'dhall
   :lighter " DhFmt")
 
