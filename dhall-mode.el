@@ -139,7 +139,7 @@ If specified, this should be the complete path to your dhall-format executable,
   :group 'dhall
   :safe 'booleanp)
 
-(defcustom dhall-format-arguments ()
+(defcustom dhall-format-arguments nil
   "Provide a list of arguments for the formatter e.g. --ascii."
   :type 'list
   :group 'dhall
