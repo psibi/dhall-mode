@@ -183,8 +183,8 @@ down.  You can also disable type-checking entirely by setting
 
 (reformatter-define dhall-format
   :program (or dhall-format-command dhall-command)
-  :args (let ((cmd (if dhall-format-with-ascii '("--ascii") '())))
-          (if dhall-format-command cmd (cons "format" cmd)))
+  :args (append (unless dhall-format-command '("format"))
+                (when dhall-format-with-ascii '("--ascii")))
   :group 'dhall
   :lighter " DhFmt")
 
