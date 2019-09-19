@@ -172,7 +172,7 @@ down.  You can also disable type-checking entirely by setting
           (if (zerop (shell-command-on-region (point-min)
                                               (point-max)
                                               (concat cmd " resolve|" cmd " type")
-                                              nil t errbuf t))
+                                              nil t errbuf))
               (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
                                         (replace-regexp-in-string "[[:space:]]+" " " (buffer-string)))
             (prog1
@@ -259,7 +259,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
                    (substring type 0
                               (- (window-width) 10))
                    "..."))
-              (propertize "Error determining type." 'face 'error))))))
+              (propertize "Error determining type. See *dhall-buffer-type-errors*" 'face 'error))))))
 
 (defun dhall-after-change (&optional _beg _end _length)
   "Called after any change in the buffer."
