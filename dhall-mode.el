@@ -288,6 +288,8 @@ STRING-TYPE type of string based off of Emacs syntax table types"
   (setq-local tab-width 4)
   (setq-local comment-start "-- ")
   (setq-local comment-end "")
+  ;; Use only spaces for indentation, for consistency with "dhall format"
+  (setq-local indent-tabs-mode nil)
   ;; Special syntax properties for Dhall
   (setq-local syntax-propertize-function 'dhall-syntax-propertize)
   (add-hook 'after-change-functions 'dhall-after-change nil t)
