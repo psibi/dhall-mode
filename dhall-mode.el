@@ -155,7 +155,8 @@ down.  You can also disable type-checking entirely by setting
   :safe 'numberp)
 
 (defun dhall-buffer-type ()
-  "Return the type of the expression in the current buffer."
+  "Return the type of the expression in the current buffer.
+If called interactively, print it as a message instead."
   (interactive)
   ;; We resolve dhall-command in the current buffer, in case
   ;; dhall-command, exec-path or process-environment is local
@@ -173,8 +174,9 @@ down.  You can also disable type-checking entirely by setting
                                               (point-max)
                                               (concat cmd " resolve|" cmd " type")
                                               nil t errbuf))
-              (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
-                                        (replace-regexp-in-string "[[:space:]]+" " " (buffer-string)))
+              (let ((type (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
+                            (replace-regexp-in-string "[[:space:]]+" " " (buffer-string)))))
+                (if (called-interactively-p 'any) (message type) type))
             (prog1
                 nil
               (with-current-buffer errbuf
