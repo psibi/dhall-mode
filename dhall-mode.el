@@ -302,10 +302,6 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 
 
 ;; REPL
-(defcustom dhall-repl-executable "dhall-repl"
-  "Location of dhall-repl command."
-  :type 'string)
-
 (defconst dhall-prompt-regexp "⊢ ")
 
 (define-derived-mode dhall-repl-mode comint-mode "Dhall-REPL"
@@ -324,7 +320,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 
 (defun dhall--make-repl-in-buffer (buffer)
   "Make Dhall Repl in BUFFER."
-  (make-comint-in-buffer "Dhall-REPL" buffer dhall-repl-executable))
+  (make-comint-in-buffer "Dhall-REPL" buffer dhall-command nil "repl"))
 
 
 ;; Provide ourselves:
