@@ -49,7 +49,7 @@
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-b") 'dhall-repl-show)
     (define-key map (kbd "C-c C-f") 'dhall-format-buffer)
-    (define-key map (kbd "C-c C-t") 'dhall-buffer-type)
+    (define-key map (kbd "C-c C-t") 'dhall-buffer-type-show)
     map)
   "Keymap for using `dhall-mode'.")
 
@@ -155,9 +155,7 @@ down.  You can also disable type-checking entirely by setting
   :safe 'numberp)
 
 (defun dhall-buffer-type ()
-  "Return the type of the expression in the current buffer.
-If called interactively, print it as a message instead."
-  (interactive)
+  "Return the type of the expression in the current buffer."
   ;; We resolve dhall-command in the current buffer, in case
   ;; dhall-command, exec-path or process-environment is local
   ;; there, so that we can propagate it to the temp buffer.
@@ -174,9 +172,8 @@ If called interactively, print it as a message instead."
                                               (point-max)
                                               (concat cmd " resolve|" cmd " type")
                                               nil t errbuf))
-              (let ((type (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
-                            (replace-regexp-in-string "[[:space:]]+" " " (buffer-string)))))
-                (if (called-interactively-p 'any) (message type) type))
+              (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
+                                        (replace-regexp-in-string "[[:space:]]+" " " (buffer-string)))
             (prog1
                 nil
               (with-current-buffer errbuf
@@ -323,6 +320,14 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 (defun dhall--make-repl-in-buffer (buffer)
   "Make Dhall Repl in BUFFER."
   (make-comint-in-buffer "Dhall-REPL" buffer dhall-command nil "repl"))
+
+(defun dhall-buffer-type-show ()
+  "Show the type of the current buffer's dhall expression in the minibuffer."
+  (interactive)
+  (let ((type (dhall-buffer-type)))
+    (if type
+        (message type)
+      (user-error "Error determining type.  See *dhall-buffer-type-errors*"))))
 
 
 ;; Provide ourselves:
