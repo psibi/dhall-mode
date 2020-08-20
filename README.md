@@ -30,10 +30,7 @@ language.
 * Basic indendation, commenting
 * Automatic formatting on save (Configurable via variable). Uses [dhall-format](https://github.com/dhall-lang/dhall-haskell) for it.
 * Error highlighting.
-
-Todo:
-
-* Add REPL support. See: https://github.com/dhall-lang/dhall-lang/issues/17
+* REPL support.
 
 ## License
 
