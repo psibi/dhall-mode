@@ -238,7 +238,7 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 (defvar-local dhall-buffer-type-compute-timer nil)
 
 (defun dhall-buffer-type-compute (buffer)
-  "Recompute `dhall-buffer-type' in BUFFER."
+  "Recompute variable `dhall-buffer-type' in BUFFER."
   (with-current-buffer buffer
     (let ((type (dhall-buffer-type)))
       (setq dhall-buffer-type
