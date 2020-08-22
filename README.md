@@ -1,6 +1,7 @@
 # dhall-mode
 
 [![MELPA](https://melpa.org/packages/dhall-mode-badge.svg)](https://melpa.org/#/dhall-mode)
+![check](https://github.com/psibi/dhall-mode/workflows/check/badge.svg)
 
 Emacs Major mode for working
 with [Dhall](https://github.com/dhall-lang/dhall-lang) configuration
