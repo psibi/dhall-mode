@@ -1,4 +1,4 @@
-;;; dhall-mode.el --- a major mode for dhall configuration language -*- lexical-binding: t -*-
+;;; dhall-mode.el --- Major mode for the dhall configuration language -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2017 Sibi Prabakaran
 
@@ -105,8 +105,7 @@
     (,dhall-mode-variables . (1 font-lock-variable-name-face))
     (,dhall-mode-keywords . font-lock-keyword-face)
     (,dhall-mode-doubles . font-lock-constant-face)
-    (,dhall-mode-numerals . font-lock-constant-face)
-    ))
+    (,dhall-mode-numerals . font-lock-constant-face)))
 
 (defcustom dhall-command "dhall"
   "Command used to normalize Dhall files.
@@ -198,10 +197,6 @@ down.  You can also disable type-checking entirely by setting
   :group 'dhall
   :lighter " DhLint")
 
-(defun dhall--get-parse-state (pos)
-  "Get the result of `syntax-ppss' at POS."
-  (save-excursion (save-match-data (syntax-ppss pos))))
-
 (defun dhall--get-string-type (parse-state)
   "Get the type of string based on PARSE-STATE."
   (let ((string-start (nth 8 parse-state)))
@@ -219,16 +214,12 @@ STRING-TYPE type of string based off of Emacs syntax table types"
 
 (defun dhall--double-quotes ()
   "Handle Dhall double quotes."
-  (let* ((pos (match-beginning 0))
-         (ps (dhall--get-parse-state pos))
-         (string-type (dhall--get-string-type ps)))
+  (let* ((pos (match-beginning 0)))
     (dhall--mark-string pos ?\")))
 
 (defun dhall--single-quotes ()
   "Handle Dhall single quotes."
-  (let* ((pos (match-beginning 0))
-         (ps (dhall--get-parse-state pos))
-         (string-type (dhall--get-string-type ps)))
+  (let* ((pos (match-beginning 0)))
     (dhall--mark-string pos ?\")))
 
 (defun dhall-syntax-propertize (start end)
