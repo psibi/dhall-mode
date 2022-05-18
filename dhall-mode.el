@@ -185,6 +185,12 @@ down.  You can also disable type-checking entirely by setting
   :group 'dhall
   :lighter " DhFmt")
 
+(reformatter-define dhall-freeze-all
+  :program dhall-command
+  :args '("freeze" "--all")
+  :group 'dhall
+  :lighter " DhFreezeAll")
+
 (reformatter-define dhall-freeze
   :program dhall-command
   :args '("freeze")
