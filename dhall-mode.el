@@ -144,6 +144,18 @@ If specified, this should be the complete path to your dhall-format executable,
   :group 'dhall
   :safe 'listp)
 
+(defcustom dhall-freeze-arguments nil
+  "Provide a list of arguments for freeze e.g. '(\"--transitive\")."
+  :type 'list
+  :group 'dhall
+  :safe 'listp)
+
+(defcustom dhall-lint-arguments nil
+  "Provide a list of arguments for the linter e.g. '(\"--transitive\")."
+  :type 'list
+  :group 'dhall
+  :safe 'listp)
+
 (defcustom dhall-type-check-inactivity-timeout 1
   "Wait for this period of inactivity before refreshing the buffer type.
 You can try increasing this if type checking is slowing things
@@ -187,13 +199,13 @@ down.  You can also disable type-checking entirely by setting
 
 (reformatter-define dhall-freeze
   :program dhall-command
-  :args '("freeze")
+  :args (append '("freeze") dhall-freeze-arguments)
   :group 'dhall
   :lighter " DhFreeze")
 
 (reformatter-define dhall-lint
   :program dhall-command
-  :args '("lint")
+  :args (append '("lint") dhall-lint-arguments)
   :group 'dhall
   :lighter " DhLint")
 
