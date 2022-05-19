@@ -54,7 +54,7 @@
   "Keymap for using `dhall-mode'.")
 
 (defgroup dhall nil
-  "Major mode for editing dhall files"
+  "Major mode for editing dhall files."
   :group 'languages
   :prefix "dhall-"
   :link '(url-link :tag "Site" "https://github.com/psibi/dhall-mode")
