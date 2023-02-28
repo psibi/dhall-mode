@@ -139,19 +139,19 @@ If specified, this should be the complete path to your dhall-format executable,
   :safe 'booleanp)
 
 (defcustom dhall-format-arguments nil
-  "Provide a list of arguments for the formatter e.g. '(\"--ascii\")."
+  "Provide a list of arguments for the formatter e.g. \='(\"--ascii\")."
   :type 'list
   :group 'dhall
   :safe 'listp)
 
 (defcustom dhall-freeze-arguments nil
-  "Provide a list of arguments for freeze e.g. '(\"--transitive\")."
+  "Provide a list of arguments for freeze e.g. ='(\"--transitive\")."
   :type 'list
   :group 'dhall
   :safe 'listp)
 
 (defcustom dhall-lint-arguments nil
-  "Provide a list of arguments for the linter e.g. '(\"--transitive\")."
+  "Provide a list of arguments for the linter e.g. \='(\"--transitive\")."
   :type 'list
   :group 'dhall
   :safe 'listp)
