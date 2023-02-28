@@ -181,7 +181,7 @@ down.  You can also disable type-checking entirely by setting
           (insert source)
           (if (zerop (shell-command-on-region (point-min)
                                               (point-max)
-                                              (concat cmd " resolve|" cmd " type")
+                                              (concat cmd " type")
                                               nil t errbuf))
               (replace-regexp-in-string "\\(?:\\` \\| \\'\\)" ""
                                         (replace-regexp-in-string "[[:space:]]+" " " (buffer-string)))
