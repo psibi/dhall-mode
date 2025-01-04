@@ -85,7 +85,7 @@
 (defvar dhall-mode-keywords (regexp-opt '("if" "then" "else" "let" "in" "using" "as") 'symbols))
 
 (defvar dhall-mode-types
-  (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type") 'symbols))
+  (regexp-opt '("Optional" "Bool" "Natural" "Integer" "Double" "Text" "List" "Type" "Date" "Time" "TimeZone" "Bytes") 'symbols))
 
 (defconst dhall-mode-constants (regexp-opt '("True" "False") 'symbols))
 (defconst dhall-mode-numerals "\\_<[+\\-][1-9]+\\_>")
@@ -94,6 +94,7 @@
 (defconst dhall-mode-variables "\\([a-zA-Z_][a-zA-Z_0-9\\-]*\\)[[:space:]]*=")
 (defconst dhall-mode-urls "\\_<\\(?:https?\\|file\\):[^[:space:]]+")
 (defconst dhall-mode-shas "\\_<sha256:[a-f0-9]+\\_>")
+(defconst dhall-mode-date "[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]")
 
 (defconst dhall-mode-font-lock-keywords
   `( ;; Variables
@@ -104,6 +105,7 @@
     (,dhall-mode-operators . font-lock-builtin-face)
     (,dhall-mode-variables . (1 font-lock-variable-name-face))
     (,dhall-mode-keywords . font-lock-keyword-face)
+    (,dhall-mode-date . font-lock-constant-face)
     (,dhall-mode-doubles . font-lock-constant-face)
     (,dhall-mode-numerals . font-lock-constant-face)))
 
